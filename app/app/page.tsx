@@ -4,7 +4,6 @@ import { useAnchorProgram } from '@/app/utils/useAnchorProgram'
 import { Keypair } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
-
 import { useMemo } from 'react'
 import * as anchor from '@coral-xyz/anchor'
 
@@ -24,8 +23,7 @@ export default function Home() {
 	console.log(`   Mint Address: ${mintKeypair.publicKey}`)
 
 	async function createSplToken() {
-		if (!payer) return
-		console.log('payer', payer)
+		if (!payer || !program) return
 
 		// SPL Token default = 9 decimals
 		const transactionSignature = await program.methods
@@ -43,7 +41,7 @@ export default function Home() {
 	}
 
 	async function mintSomeTokens() {
-		if (!payer) return
+		if (!payer || !program) return
 		// Derive the associated token address account for the mint and payer.
 		const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
 			mintKeypair.publicKey,
