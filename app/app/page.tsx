@@ -1,15 +1,10 @@
 'use client'
-import Image from 'next/image'
+
 import { useAnchorProgram } from '@/app/utils/useAnchorProgram'
 import { Keypair } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
-import {
-	useAnchorWallet,
-	useConnection,
-	useWallet,
-} from '@jup-ag/wallet-adapter'
+import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 
-import { ConnectWallet } from '@/app/comps/connect-wallet'
 import { useMemo } from 'react'
 import * as anchor from '@coral-xyz/anchor'
 
@@ -76,22 +71,20 @@ export default function Home() {
 		console.log(`   Transaction Signature: ${transactionSignature}`)
 	}
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-between p-24">
+		<div className="flex items-center justify-between p-24">
 			<button
+				className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
 				onClick={() => createSplToken()}
-				className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30"
 			>
 				Create Token
 			</button>
 
 			<button
+				className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
 				onClick={() => mintSomeTokens()}
-				className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30"
 			>
 				Mint Token
 			</button>
-
-			<ConnectWallet />
-		</main>
+		</div>
 	)
 }
