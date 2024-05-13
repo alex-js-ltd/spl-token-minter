@@ -1,4 +1,4 @@
-import { ConnectWallet } from '@/app/comps/connect-wallet'
+import { ConnectWallet } from '@/app/comps/connectWallet'
 
 export function Header() {
 	return (
