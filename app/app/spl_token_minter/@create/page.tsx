@@ -7,6 +7,7 @@ import { Icon } from '@/app/comps/_icon'
 import { useForm, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { MetaData } from '@/app/utils/schemas'
+import { useSteps } from '@/app/hooks/use_steps'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -21,6 +22,8 @@ export default function Page() {
 	})
 
 	const currentValue = true
+
+	const { step, next } = useSteps()
 
 	return (
 		<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -37,14 +40,36 @@ export default function Page() {
 								type: 'text',
 							})}
 							placeholder="Name"
+							variant={step === 0 ? 'default' : 'hidden'}
+						/>
+
+						<Input
+							{...getInputProps(fields.symbol, {
+								type: 'text',
+							})}
+							placeholder="Symbol"
+							variant={step === 1 ? 'default' : 'hidden'}
+						/>
+
+						<Input
+							{...getInputProps(fields.decimals, {
+								type: 'text',
+							})}
+							placeholder="Decimals"
+							variant={step === 2 ? 'default' : 'hidden'}
+						/>
+
+						<Input
+							{...getInputProps(fields.uri, {
+								type: 'text',
+							})}
+							placeholder="Uri"
+							variant={step === 3 ? 'default' : 'hidden'}
 						/>
 					</div>
 
 					<div className="relative flex justify-end items-end w-full">
-						<Button
-							onClick={() => console.log('click')}
-							disabled={currentValue ? false : true}
-						>
+						<Button onClick={next} disabled={currentValue ? false : true}>
 							<Icon
 								name="arrow-up"
 								variant={currentValue ? 'white' : 'default'}
