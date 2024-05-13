@@ -99,7 +99,13 @@ export default function Page() {
 				</form>
 			</div>
 
-			{href ? <AnchorTag href={href}>view transaction</AnchorTag> : null}
+			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
+				{href ? (
+					<AnchorTag className="ml-auto" href={href}>
+						view transaction
+					</AnchorTag>
+				) : null}
+			</div>
 		</>
 	)
 }

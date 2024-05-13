@@ -20,6 +20,6 @@ const AnchorTag = React.forwardRef<HTMLAnchorElement, AnchorTagProps>(
 	},
 )
 
-AnchorTag.displayName = 'ExternalLink'
+AnchorTag.displayName = 'AnchorTag'
 
 export { AnchorTag }
