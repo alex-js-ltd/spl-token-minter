@@ -54,7 +54,7 @@ function Background({ children }: { children: ReactNode }) {
 							className="text-4xl font-semibold tracking-tighter sm:text-5xl @media(max-width:480px):text-[2rem]"
 							data-testid="home-h2"
 						>
-							Generate. Mint. Deploy.
+							Generate. Mint. Degen.
 						</h2>
 					</div>
 

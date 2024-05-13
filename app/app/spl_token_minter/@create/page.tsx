@@ -48,8 +48,18 @@ export default function Page() {
 					onSubmit={form.onSubmit}
 					noValidate
 					className="relative z-10 h-full w-full min-w-0 bg-gray-900 p-3 md:pl-4"
-					action={() => {
-						run(createSplToken())
+					action={(formData: FormData) => {
+						const submission = parseWithZod(formData, {
+							schema: MetaData,
+						})
+
+						if (submission.status !== 'success') {
+							return submission.reply()
+						}
+
+						const metadata = submission.value
+
+						run(createSplToken(metadata))
 					}}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
@@ -88,7 +98,7 @@ export default function Page() {
 						</div>
 
 						<div className="relative flex justify-end items-end w-full">
-							<Button onClick={next} disabled={currentValue ? false : true}>
+							<Button onClick={next} disabled={isLoading ? true : false}>
 								<Icon
 									name="arrow-up"
 									variant={currentValue ? 'white' : 'default'}

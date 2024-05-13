@@ -5,6 +5,9 @@ export function useSteps() {
 
 	const next = useCallback(() => {
 		setStep(prev => {
+			if (prev === 3) {
+				return prev
+			}
 			return prev + 1
 		})
 	}, [])
