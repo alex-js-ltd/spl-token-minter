@@ -33,11 +33,11 @@ export default function Page() {
 	const { createSplToken } = useSplTokenMinter()
 
 	useEffect(() => {
-		console.log('transactionSignature', transactionSignature)
+		console.log('transactionSignature 🦾', transactionSignature)
 	}, [transactionSignature])
 
 	useEffect(() => {
-		console.log('loading', isLoading)
+		console.log('loading 🚀', isLoading)
 	}, [isLoading])
 
 	return (
