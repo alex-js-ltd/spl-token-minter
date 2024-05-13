@@ -28,13 +28,13 @@ export default function Page() {
 
 	const { step, next } = useSteps()
 
-	const { run, data, isLoading } = useAsync()
+	const { run, data: transactionSignature, isLoading } = useAsync()
 
 	const { createSplToken } = useSplTokenMinter()
 
 	useEffect(() => {
-		console.log('data', data)
-	}, [data])
+		console.log('transactionSignature', transactionSignature)
+	}, [transactionSignature])
 
 	useEffect(() => {
 		console.log('loading', isLoading)
