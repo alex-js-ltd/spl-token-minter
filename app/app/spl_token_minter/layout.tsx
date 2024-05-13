@@ -6,10 +6,5 @@ type LayoutProps = {
 }
 
 export default function Layout({ create, mint }: LayoutProps) {
-	return (
-		<>
-			{create}
-			{mint}
-		</>
-	)
+	return <>{create}</>
 }
