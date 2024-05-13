@@ -8,6 +8,9 @@ import { useForm, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { MetaData } from '@/app/utils/schemas'
 import { useSteps } from '@/app/hooks/use_steps'
+import { useAsync } from '@/app/hooks/use_async'
+import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
+import { useEffect } from 'react'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -25,6 +28,18 @@ export default function Page() {
 
 	const { step, next } = useSteps()
 
+	const { run, data, isLoading } = useAsync()
+
+	const { createSplToken } = useSplTokenMinter()
+
+	useEffect(() => {
+		console.log('data', data)
+	}, [data])
+
+	useEffect(() => {
+		console.log('loading', isLoading)
+	}, [isLoading])
+
 	return (
 		<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 			<form
@@ -32,6 +47,9 @@ export default function Page() {
 				onSubmit={form.onSubmit}
 				noValidate
 				className="relative z-10 h-full w-full min-w-0 bg-gray-900 p-3 md:pl-4"
+				action={async () => {
+					run(createSplToken())
+				}}
 			>
 				<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 					<div className="relative flex w-full min-w-0 flex-1 justify-between self-start">

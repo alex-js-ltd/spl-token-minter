@@ -18,13 +18,11 @@ export function useSplTokenMinter() {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	console.log(`   Mint Address: ${mintKeypair.publicKey}`)
-
 	async function createSplToken() {
 		if (!payer || !program) return
 
 		// SPL Token default = 9 decimals
-		const transactionSignature = await program.methods
+		return program.methods
 			.createToken(metadata.name, metadata.symbol, metadata.uri)
 			.accounts({
 				payer: payer.publicKey,
@@ -32,10 +30,6 @@ export function useSplTokenMinter() {
 			})
 			.signers([mintKeypair])
 			.rpc()
-
-		console.log('Success!')
-		console.log(`   Mint Address: ${mintKeypair.publicKey}`)
-		console.log(`   Transaction Signature: ${transactionSignature}`)
 	}
 
 	async function mintSomeTokens() {
@@ -50,7 +44,7 @@ export function useSplTokenMinter() {
 		const amount = new anchor.BN(100)
 
 		// Mint the tokens to the associated token account.
-		const transactionSignature = await program.methods
+		return program.methods
 			.mintToken(amount)
 			.accounts({
 				mintAuthority: payer.publicKey,
@@ -59,12 +53,6 @@ export function useSplTokenMinter() {
 				associatedTokenAccount: associatedTokenAccountAddress,
 			})
 			.rpc()
-
-		console.log('Success!')
-		console.log(
-			`   Associated Token Account Address: ${associatedTokenAccountAddress}`,
-		)
-		console.log(`   Transaction Signature: ${transactionSignature}`)
 	}
 
 	return { createSplToken, mintSomeTokens }
