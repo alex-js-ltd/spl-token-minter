@@ -1,6 +1,6 @@
 'use client'
 
-import { useSplTokenMinter } from '@/app/hooks/useSplTokenMinter'
+import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
 
 export default function Home() {
 	const { createSplToken, mintSomeTokens } = useSplTokenMinter()

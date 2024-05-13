@@ -1,4 +1,4 @@
-import { useAnchorProgram } from './useAnchorProgram'
+import { useAnchorProgram } from './use_anchor_program'
 import { Keypair } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'

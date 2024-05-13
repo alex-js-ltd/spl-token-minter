@@ -6,7 +6,7 @@ import {
 	UnifiedWalletProvider,
 	WalletAdapterNetwork,
 } from '@jup-ag/wallet-adapter'
-import { useNetworkConfiguration } from './network-context'
+import { useNetworkConfiguration } from './network_context'
 import { clusterApiUrl } from '@solana/web3.js'
 
 export function WalletProvider({ children }: { children: ReactNode }) {
