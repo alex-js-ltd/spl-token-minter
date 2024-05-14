@@ -4,14 +4,21 @@ import { Input } from '@/app/comps/input'
 import { Button } from '@/app/comps/button'
 import { Icon } from '@/app/comps/_icon'
 
-import { useForm, getInputProps } from '@conform-to/react'
+import {
+	FormProvider,
+	useForm,
+	getInputProps,
+	useField,
+	type FormId,
+} from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { MetaData } from '@/app/utils/schemas'
 import { useSteps } from '@/app/hooks/use_steps'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
 import { AnchorTag } from '@/app/comps/anchor_tag'
-import { UploadButton } from '@/app/comps/upload_button'
+import { useState } from 'react'
+import { ImageChooser } from '@/app/comps/image_chooser'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -41,6 +48,7 @@ export default function Page() {
 		? `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
 		: undefined
 
+	const test = fields.file.name
 	return (
 		<>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -91,7 +99,7 @@ export default function Page() {
 						</div>
 
 						<div className="relative flex justify-between items-end w-full">
-							<UploadButton />
+							<ImageChooser name={fields.file.name} />
 							<Button
 								onClick={next}
 								disabled={isLoading ? true : false}
