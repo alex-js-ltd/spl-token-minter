@@ -11,6 +11,7 @@ import { useSteps } from '@/app/hooks/use_steps'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
 import { AnchorTag } from '@/app/comps/anchor_tag'
+import { UploadButton } from '@/app/comps/upload_button'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -63,7 +64,7 @@ export default function Page() {
 					}}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-						<div className="relative flex w-full min-w-0 flex-1 justify-between self-start">
+						<div className="relative flex w-full min-w-0 flex-1 justify-between self-start min-h-[1.5rem]">
 							<Input
 								{...getInputProps(fields.name, {
 									type: 'text',
@@ -87,22 +88,16 @@ export default function Page() {
 								placeholder="Decimals"
 								variant={step === 2 ? 'default' : 'hidden'}
 							/>
-
-							<Input
-								{...getInputProps(fields.uri, {
-									type: 'text',
-								})}
-								placeholder="Uri"
-								variant={step === 3 ? 'default' : 'hidden'}
-							/>
 						</div>
 
-						<div className="relative flex justify-end items-end w-full">
-							<Button onClick={next} disabled={isLoading ? true : false}>
-								<Icon
-									name="arrow-up"
-									variant={currentValue ? 'white' : 'default'}
-								/>
+						<div className="relative flex justify-between items-end w-full">
+							<UploadButton />
+							<Button
+								onClick={next}
+								disabled={isLoading ? true : false}
+								className="ml-auto"
+							>
+								<Icon name="arrow-up" className="w-6 h-6" />
 							</Button>
 						</div>
 					</div>
