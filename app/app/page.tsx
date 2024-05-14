@@ -5,6 +5,7 @@ import { Icon } from '@/app/comps/_icon'
 
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
+
 import { MetaData } from '@/app/utils/schemas'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
@@ -24,6 +25,21 @@ export default function Page() {
 
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
+
+		async onSubmit(_e, { formData }) {
+			const submission = await parseWithZod(formData, {
+				schema: MetaData.transform(async ({ image, ...data }) => {
+					return {
+						...data,
+						image: Buffer.from(await image.arrayBuffer()),
+					}
+				}),
+				async: true,
+			})
+
+			console.log(submission)
+			alert(JSON.stringify(submission))
+		},
 	})
 
 	const {
@@ -42,6 +58,10 @@ export default function Page() {
 		undefined,
 	)
 
+	console.log(form.allErrors)
+
+	const hello = fields.image.name
+
 	return (
 		<>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -50,13 +70,6 @@ export default function Page() {
 				<form
 					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-3 md:py-4"
 					{...getFormProps(form)}
-					action={(formData: FormData) => {
-						const submission = parseWithZod(formData, {
-							schema: MetaData,
-						})
-
-						console.log(submission)
-					}}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 						<div className="relative grid grid-cols-1 sm:grid-cols-3 w-full">
@@ -81,7 +94,7 @@ export default function Page() {
 							<Field
 								inputProps={{
 									...getInputProps(fields.decimals, {
-										type: 'text',
+										type: 'number',
 									}),
 									placeholder: 'Decimals',
 								}}
@@ -90,10 +103,10 @@ export default function Page() {
 
 						<div className="flex w-full gap-2 px-3 md:px-4">
 							<div className="flex flex-1 gap-1 sm:gap-2">
-								{/* <ImageChooser
-									name={fields.file.name}
+								<ImageChooser
+									name={fields.image.name}
 									setPreviewImage={setPreviewImage}
-								/> */}
+								/>
 							</div>
 
 							<Button

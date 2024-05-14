@@ -11,7 +11,7 @@ type ImageChooserProps = {
 			symbol: string
 			name: string
 			decimals: number
-			file?: File | undefined
+			image?: File | undefined
 		},
 		string[]
 	>
@@ -26,7 +26,6 @@ export function ImageChooser({ name, setPreviewImage }: ImageChooserProps) {
 		>
 			<input
 				className="absolute z-0 opacity-0 w-full h-full"
-				id="fileUpload"
 				type="file"
 				onChange={event => {
 					const file = event.target.files?.[0]
@@ -38,7 +37,7 @@ export function ImageChooser({ name, setPreviewImage }: ImageChooserProps) {
 							setPreviewImage(reader.result as string)
 						}
 						reader.readAsDataURL(file)
-						event.target.value = ''
+						// event.target.value = ''
 					} else {
 						setPreviewImage(undefined)
 					}
