@@ -20,6 +20,7 @@ import { AnchorTag } from '@/app/comps/anchor_tag'
 import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
+import { Field } from '@/app/comps/field'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -32,10 +33,6 @@ export default function Page() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 	})
-
-	const currentValue = true
-
-	const { step, next } = useSteps()
 
 	const {
 		run,
@@ -62,7 +59,7 @@ export default function Page() {
 					id={form.id}
 					onSubmit={form.onSubmit}
 					noValidate
-					className="relative z-10 h-full w-full min-w-0 bg-gray-900 p-3 md:pl-4"
+					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-3 md:py-4"
 					action={(formData: FormData) => {
 						const submission = parseWithZod(formData, {
 							schema: MetaData,
@@ -78,33 +75,39 @@ export default function Page() {
 					}}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-						<div className="relative flex w-full min-w-0 flex-1 justify-between self-start min-h-[1.5rem]">
-							<Input
-								{...getInputProps(fields.name, {
-									type: 'text',
-								})}
-								placeholder="Name"
-								variant={step === 0 ? 'default' : 'hidden'}
+						<div className="relative flex w-full flex-col">
+							<Field
+								inputProps={{
+									autoFocus: true,
+									...getInputProps(fields.name, {
+										type: 'text',
+									}),
+									placeholder: 'Name',
+								}}
 							/>
 
-							<Input
-								{...getInputProps(fields.symbol, {
-									type: 'text',
-								})}
-								placeholder="Symbol"
-								variant={step === 1 ? 'default' : 'hidden'}
+							<Field
+								inputProps={{
+									autoFocus: true,
+									...getInputProps(fields.symbol, {
+										type: 'text',
+									}),
+									placeholder: 'Symbol',
+								}}
 							/>
 
-							<Input
-								{...getInputProps(fields.decimals, {
-									type: 'text',
-								})}
-								placeholder="Decimals"
-								variant={step === 2 ? 'default' : 'hidden'}
+							<Field
+								inputProps={{
+									autoFocus: true,
+									...getInputProps(fields.decimals, {
+										type: 'text',
+									}),
+									placeholder: 'Decimals',
+								}}
 							/>
 						</div>
 
-						<div className="flex w-full gap-2">
+						<div className="flex w-full gap-2 px-3 md:px-4">
 							<div className="flex flex-1 gap-1 sm:gap-2">
 								<ImageChooser
 									name={fields.file.name}
@@ -112,7 +115,7 @@ export default function Page() {
 								/>
 							</div>
 
-							<Button onClick={next} disabled={false} className="ml-auto">
+							<Button disabled={isLoading ? true : false} className="ml-auto">
 								<Icon name="arrow-up" className="w-6 h-6" />
 							</Button>
 						</div>

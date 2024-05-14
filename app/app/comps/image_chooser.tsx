@@ -21,7 +21,7 @@ type ImageChooserProps = {
 export function ImageChooser({ name, setPreviewImage }: ImageChooserProps) {
 	return (
 		<label
-			className="shrink-0 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 py-2 flex w-fit select-none gap-2 px-2 text-white/70 hover:text-white sm:w-24 sm:px-3"
+			className="relative shrink-0 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 items-center justify-center bg-transparent hover:bg-gray-800 focus-visible:bg-gray-800 focus-visible:ring-0 h-8 py-2 flex w-fit select-none gap-2 px-2 text-white/70 hover:text-white sm:w-24 sm:px-3"
 			htmlFor="fileUpload"
 		>
 			<input
@@ -33,6 +33,7 @@ export function ImageChooser({ name, setPreviewImage }: ImageChooserProps) {
 
 					if (file) {
 						const reader = new FileReader()
+
 						reader.onloadend = () => {
 							setPreviewImage(reader.result as string)
 						}
