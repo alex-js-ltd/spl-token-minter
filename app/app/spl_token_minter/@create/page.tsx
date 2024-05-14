@@ -19,6 +19,7 @@ import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
 import { AnchorTag } from '@/app/comps/anchor_tag'
 import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
+import { PreviewImage } from '@/app/comps/preview_image'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -48,10 +49,15 @@ export default function Page() {
 		? `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
 		: undefined
 
-	const test = fields.file.name
+	const [previewImage, setPreviewImage] = useState<string | undefined>(
+		undefined,
+	)
+
 	return (
 		<>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
+				<PreviewImage src={previewImage} setPreviewImage={setPreviewImage} />
+
 				<form
 					id={form.id}
 					onSubmit={form.onSubmit}
@@ -100,7 +106,10 @@ export default function Page() {
 
 						<div className="flex w-full gap-2">
 							<div className="flex flex-1 gap-1 sm:gap-2">
-								<ImageChooser name={fields.file.name} />
+								<ImageChooser
+									name={fields.file.name}
+									setPreviewImage={setPreviewImage}
+								/>
 							</div>
 
 							<Button onClick={next} disabled={false} className="ml-auto">
