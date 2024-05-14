@@ -7,6 +7,7 @@ const iconVariants = cva('inline self-center', {
 		variant: {
 			default: 'text-zinc-400',
 			white: 'text-white',
+			upload: '',
 		},
 	},
 })

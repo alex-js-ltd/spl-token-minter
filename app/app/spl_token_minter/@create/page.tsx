@@ -98,13 +98,12 @@ export default function Page() {
 							/>
 						</div>
 
-						<div className="relative flex justify-between items-end w-full">
-							<ImageChooser name={fields.file.name} />
-							<Button
-								onClick={next}
-								disabled={isLoading ? true : false}
-								className="ml-auto"
-							>
+						<div className="flex w-full gap-2">
+							<div className="flex flex-1 gap-1 sm:gap-2">
+								<ImageChooser name={fields.file.name} />
+							</div>
+
+							<Button onClick={next} disabled={false} className="ml-auto">
 								<Icon name="arrow-up" className="w-6 h-6" />
 							</Button>
 						</div>
