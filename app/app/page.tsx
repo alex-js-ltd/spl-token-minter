@@ -57,17 +57,18 @@ export default function Page() {
 							schema: MetaData,
 						})
 
+						console.log(submission.status)
 						if (submission.status !== 'success') {
 							return submission.reply()
 						}
 
 						const metadata = submission.value
-
-						run(createSplToken(metadata))
+						console.log(metadata)
+						// run(createSplToken(metadata))
 					}}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-						<div className="relative flex w-full flex-col">
+						<div className="relative grid grid-cols-1 sm:grid-cols-3 w-full">
 							<Field
 								inputProps={{
 									autoFocus: true,
