@@ -3,7 +3,7 @@
 import { Button } from '@/app/comps/button'
 import { Icon } from '@/app/comps/_icon'
 
-import { useForm, getInputProps } from '@conform-to/react'
+import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { MetaData } from '@/app/utils/schemas'
 import { useAsync } from '@/app/hooks/use_async'
@@ -48,29 +48,20 @@ export default function Page() {
 				<PreviewImage src={previewImage} setPreviewImage={setPreviewImage} />
 
 				<form
-					id={form.id}
-					onSubmit={form.onSubmit}
-					noValidate
 					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-3 md:py-4"
+					{...getFormProps(form)}
 					action={(formData: FormData) => {
 						const submission = parseWithZod(formData, {
 							schema: MetaData,
 						})
 
-						if (submission.status !== 'success') {
-							return submission.reply()
-						}
-
-						const metadata = submission.value
-						console.log(metadata)
-						// run(createSplToken(metadata))
+						console.log(submission)
 					}}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 						<div className="relative grid grid-cols-1 sm:grid-cols-3 w-full">
 							<Field
 								inputProps={{
-									autoFocus: true,
 									...getInputProps(fields.name, {
 										type: 'text',
 									}),
@@ -80,7 +71,6 @@ export default function Page() {
 
 							<Field
 								inputProps={{
-									autoFocus: true,
 									...getInputProps(fields.symbol, {
 										type: 'text',
 									}),
@@ -90,7 +80,6 @@ export default function Page() {
 
 							<Field
 								inputProps={{
-									autoFocus: true,
 									...getInputProps(fields.decimals, {
 										type: 'text',
 									}),
@@ -101,13 +90,17 @@ export default function Page() {
 
 						<div className="flex w-full gap-2 px-3 md:px-4">
 							<div className="flex flex-1 gap-1 sm:gap-2">
-								<ImageChooser
+								{/* <ImageChooser
 									name={fields.file.name}
 									setPreviewImage={setPreviewImage}
-								/>
+								/> */}
 							</div>
 
-							<Button disabled={isLoading ? true : false} className="ml-auto">
+							<Button
+								disabled={isLoading ? true : false}
+								className="ml-auto"
+								type="submit"
+							>
 								<Icon name="arrow-up" className="w-6 h-6" />
 							</Button>
 						</div>
