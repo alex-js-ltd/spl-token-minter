@@ -57,7 +57,6 @@ export default function Page() {
 							schema: MetaData,
 						})
 
-						console.log(submission.status)
 						if (submission.status !== 'success') {
 							return submission.reply()
 						}

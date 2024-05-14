@@ -7,7 +7,6 @@ const iconVariants = cva('inline self-center', {
 		variant: {
 			default: 'text-zinc-400',
 			white: 'text-white',
-			upload: '',
 		},
 	},
 })
@@ -18,13 +17,7 @@ export interface IconProps
 	name: string
 }
 
-export function Icon({
-	className,
-	variant,
-
-	name = 'arrow-up',
-	...props
-}: IconProps) {
+export function Icon({ className, variant, name, ...props }: IconProps) {
 	return (
 		<svg {...props} className={cn(iconVariants({ variant, className }))}>
 			<use href={`/icons.svg#${name}`} />
