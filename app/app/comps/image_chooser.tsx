@@ -38,6 +38,7 @@ export function ImageChooser({ name, setPreviewImage }: ImageChooserProps) {
 							setPreviewImage(reader.result as string)
 						}
 						reader.readAsDataURL(file)
+						event.target.value = ''
 					} else {
 						setPreviewImage(undefined)
 					}
