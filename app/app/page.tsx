@@ -47,9 +47,9 @@ export default function Page() {
 				return submission.reply()
 			}
 
-			const { symbol, name, image } = submission.value
+			const { image, name, symbol, description } = submission.value
 
-			const data = await imageUpload(image, name, symbol, 'test description')
+			const data = await imageUpload(image, name, symbol, description)
 
 			const uri = `${window.location.origin}/api/metadata/${data.id}`
 			console.log(uri)
@@ -100,6 +100,16 @@ export default function Page() {
 										type: 'number',
 									}),
 									placeholder: 'Decimals',
+								}}
+							/>
+
+							<Field
+								inputProps={{
+									...getInputProps(fields.description, {
+										type: 'text',
+									}),
+									placeholder: 'Description',
+									className: 'sm:col-span-3 w-full',
 								}}
 							/>
 						</div>
