@@ -38,16 +38,16 @@ export default function Page() {
 				return submission.reply()
 			}
 
-			const { image } = submission.value
+			const { image, name, symbol } = submission.value
 
-			const response = await fetch(`/api/upload?filename=${image.name}`, {
-				method: 'POST',
-				body: image,
-			})
+			const response = await fetch(
+				`/api/upload?filename=${image.name}&name=${name}&symbol=${symbol}`,
+				{
+					method: 'POST',
+					body: image,
+				},
+			)
 
-			const newBlob = (await response.json()) as PutBlobResult
-
-			console.log('new blob', newBlob)
 			alert(JSON.stringify(submission))
 		},
 	})
