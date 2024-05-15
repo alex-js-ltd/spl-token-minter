@@ -4,8 +4,6 @@ import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useMemo } from 'react'
 import * as anchor from '@coral-xyz/anchor'
-import { z } from 'zod'
-import { MetaData } from '@/app/utils/schemas'
 
 const metadata = {
 	name: 'Solana Gold',
@@ -20,7 +18,7 @@ export function useSplTokenMinter() {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	async function createSplToken(metadata: z.infer<typeof MetaData>) {
+	async function createSplToken() {
 		if (!payer || !program) return
 
 		// SPL Token default = 9 decimals
