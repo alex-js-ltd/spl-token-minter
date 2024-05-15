@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
-import { put, type PutBlobResult } from '@vercel/blob'
+import { type PutBlobResult } from '@vercel/blob'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -27,16 +27,9 @@ export default function Page() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onBlur',
 
-		async onSubmit(_e, { formData }) {
-			// const submission = await parseWithZod(formData, {
-			// 	schema: MetaData.transform(async ({ image, ...data }) => {
-			// 		return {
-			// 			...data,
-			// 			image: Buffer.from(await image.arrayBuffer()),
-			// 		}
-			// 	}),
-			// 	async: true,
-			// })
+		async onSubmit(e, { formData }) {
+			e.preventDefault()
+
 			const submission = parseWithZod(formData, {
 				schema: MetaData,
 			})
@@ -51,7 +44,7 @@ export default function Page() {
 				method: 'POST',
 				body: image,
 			})
-			console.log(response)
+
 			const newBlob = (await response.json()) as PutBlobResult
 
 			console.log('new blob', newBlob)
