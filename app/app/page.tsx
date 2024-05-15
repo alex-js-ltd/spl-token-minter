@@ -52,7 +52,7 @@ export default function Page() {
 			const data = await imageUpload(image, name, symbol, description)
 
 			const uri = `${window.location.origin}/api/metadata/${data.id}`
-			console.log(uri)
+
 			run(createSplToken({ name, symbol, uri }))
 		},
 	})
