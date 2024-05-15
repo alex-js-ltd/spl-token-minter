@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
-import { type PutBlobResult } from '@vercel/blob'
+import { imageUpload } from './utils/image_upload'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -38,17 +38,9 @@ export default function Page() {
 				return submission.reply()
 			}
 
-			const { image, name, symbol } = submission.value
+			const metadata = submission.value
 
-			const response = await fetch(
-				`/api/upload?filename=${image.name}&name=${name}&symbol=${symbol}`,
-				{
-					method: 'POST',
-					body: image,
-				},
-			)
-
-			alert(JSON.stringify(submission))
+			await imageUpload(metadata)
 		},
 	})
 

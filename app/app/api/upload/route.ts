@@ -23,5 +23,5 @@ export async function POST(request: Request): Promise<NextResponse> {
 		},
 	})
 
-	return NextResponse.json(blob)
+	return NextResponse.json({ ...newToken })
 }
