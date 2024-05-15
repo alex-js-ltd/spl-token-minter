@@ -51,8 +51,7 @@ export default function Page() {
 				method: 'POST',
 				body: image,
 			})
-
-			alert(JSON.stringify(response))
+			console.log(response)
 			const newBlob = (await response.json()) as PutBlobResult
 
 			console.log('new blob', newBlob)
