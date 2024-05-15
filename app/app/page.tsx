@@ -34,7 +34,7 @@ export default function Page() {
 		},
 
 		// Validate the form on blur event triggered
-		shouldValidate: 'onBlur',
+		shouldValidate: 'onSubmit',
 
 		async onSubmit(e, { formData }) {
 			e.preventDefault()
@@ -65,12 +65,14 @@ export default function Page() {
 		undefined,
 	)
 
-	console.log(form.allErrors)
-
 	return (
 		<>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
-				<PreviewImage src={previewImage} setPreviewImage={setPreviewImage} />
+				<PreviewImage
+					src={previewImage}
+					setPreviewImage={setPreviewImage}
+					errors={fields.image.errors}
+				/>
 
 				<form
 					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-3 md:py-4"
@@ -85,6 +87,7 @@ export default function Page() {
 									}),
 									placeholder: 'Name',
 								}}
+								errors={fields.name.errors}
 							/>
 
 							<Field
@@ -94,6 +97,7 @@ export default function Page() {
 									}),
 									placeholder: 'Symbol',
 								}}
+								errors={fields.symbol.errors}
 							/>
 
 							<Field
@@ -103,6 +107,7 @@ export default function Page() {
 									}),
 									placeholder: 'Decimals',
 								}}
+								errors={fields.decimals.errors}
 							/>
 
 							<Field
@@ -113,6 +118,7 @@ export default function Page() {
 									placeholder: 'Description',
 									className: 'sm:col-span-3 w-full',
 								}}
+								errors={fields.description.errors}
 							/>
 						</div>
 

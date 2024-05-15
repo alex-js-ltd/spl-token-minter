@@ -1,17 +1,36 @@
 'use client'
 
 import type { Dispatch, SetStateAction } from 'react'
+import type { ListOfErrors } from './field'
+import { cn } from '../utils/misc'
 
 type PreviewImageProps = {
 	src: string | undefined
 	setPreviewImage: Dispatch<SetStateAction<string | undefined>>
+	errors: ListOfErrors
 }
 
-export function PreviewImage({ src, setPreviewImage }: PreviewImageProps) {
+export function PreviewImage({
+	src,
+	setPreviewImage,
+	errors,
+}: PreviewImageProps) {
+	const error = errors?.length ? true : false
+	const border = error && !src ? 'border-red-400' : 'border-white/10'
+
 	return (
 		<div className="w-full h-[69px]">
-			<div className="flex w-full gap-2 border-b border-white border-opacity-[0.125] p-3">
-				<div className="group relative h-[44px] w-[48px] shrink-0 rounded-lg border border-white/10 transition-all">
+			<div
+				className={
+					'flex w-full gap-2 border-b border-white border-opacity-[0.125] p-3'
+				}
+			>
+				<div
+					className={cn(
+						'group relative h-[44px] w-[48px] shrink-0 rounded-lg border transition-all duration-500 ease-in-out',
+						border,
+					)}
+				>
 					{src ? (
 						<>
 							<button
