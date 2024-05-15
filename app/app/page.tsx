@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
+import { put } from '@vercel/blob'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -27,17 +28,28 @@ export default function Page() {
 		shouldValidate: 'onBlur',
 
 		async onSubmit(_e, { formData }) {
-			const submission = await parseWithZod(formData, {
-				schema: MetaData.transform(async ({ image, ...data }) => {
-					return {
-						...data,
-						image: Buffer.from(await image.arrayBuffer()),
-					}
-				}),
-				async: true,
+			// const submission = await parseWithZod(formData, {
+			// 	schema: MetaData.transform(async ({ image, ...data }) => {
+			// 		return {
+			// 			...data,
+			// 			image: Buffer.from(await image.arrayBuffer()),
+			// 		}
+			// 	}),
+			// 	async: true,
+			// })
+			const submission = parseWithZod(formData, {
+				schema: MetaData,
 			})
 
-			console.log(submission)
+			if (submission.status !== 'success') {
+				return submission.reply()
+			}
+
+			const { image } = submission.value
+
+			const blob = await put(image.name, image, { access: 'public' })
+
+			console.log(blob)
 			alert(JSON.stringify(submission))
 		},
 	})
