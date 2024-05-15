@@ -1,16 +1,15 @@
-import { MetaData } from './schemas'
-import { z } from 'zod'
+type Data = { id: string }
 
-export async function imageUpload(metadata: z.infer<typeof MetaData>) {
+export async function imageUpload(image: File, name: string, symbol: string) {
 	const res = await fetch(
-		`/api/upload?filename=${metadata.image.name}&name=${metadata.name}&symbol=${metadata.symbol}`,
+		`/api/upload?filename=${image.name}&name=${name}&symbol=${symbol}`,
 		{
 			method: 'POST',
-			body: metadata.image,
+			body: image,
 		},
 	)
 
-	console.log(res)
+	const data: Data = await res.json()
 
-	return res
+	return data
 }

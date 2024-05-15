@@ -18,7 +18,11 @@ export function useSplTokenMinter() {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	async function createSplToken() {
+	async function createSplToken(metadata: {
+		name: string
+		symbol: string
+		uri: string
+	}) {
 		if (!payer || !program) return
 
 		// SPL Token default = 9 decimals

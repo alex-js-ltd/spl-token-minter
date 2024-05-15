@@ -17,6 +17,14 @@ import { Field } from '@/app/comps/field'
 import { imageUpload } from './utils/image_upload'
 
 export default function Page() {
+	const {
+		run,
+		data: transactionSignature,
+		isLoading,
+	} = useAsync<string | undefined>()
+
+	const { createSplToken } = useSplTokenMinter()
+
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
 		onValidate({ formData }) {
@@ -38,19 +46,15 @@ export default function Page() {
 				return submission.reply()
 			}
 
-			const metadata = submission.value
+			const { symbol, name, image } = submission.value
 
-			await imageUpload(metadata)
+			const data = await imageUpload(image, name, symbol)
+
+			const uri = `${window.location.origin}/api/metadata/${data.id}`
+			console.log(uri)
+			run(createSplToken({ name, symbol, uri }))
 		},
 	})
-
-	const {
-		run,
-		data: transactionSignature,
-		isLoading,
-	} = useAsync<string | undefined>()
-
-	const { createSplToken } = useSplTokenMinter()
 
 	const href = transactionSignature
 		? `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
@@ -59,10 +63,6 @@ export default function Page() {
 	const [previewImage, setPreviewImage] = useState<string | undefined>(
 		undefined,
 	)
-
-	console.log(form.allErrors)
-
-	const hello = fields.image.name
 
 	return (
 		<>

@@ -5,7 +5,7 @@ export async function GET(
 	_request: Request,
 	{ params }: { params: { id: string } },
 ): Promise<NextResponse> {
-	if (!params.id) return NextResponse.json({})
+	if (!params.id) return NextResponse.json({ status: 500 })
 
 	const token = await prisma.tokenMetaData.findUnique({
 		where: {

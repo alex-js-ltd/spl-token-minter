@@ -8,8 +8,9 @@ export async function POST(request: Request): Promise<NextResponse> {
 	const name = searchParams.get('name')
 	const symbol = searchParams.get('symbol')
 
-	if (!filename || !name || !symbol || !request.body)
-		return NextResponse.json({})
+	if (!filename || !name || !symbol || !request.body) {
+		return NextResponse.json({ data: {} })
+	}
 
 	const blob = await put(filename, request.body, {
 		access: 'public',
@@ -23,5 +24,5 @@ export async function POST(request: Request): Promise<NextResponse> {
 		},
 	})
 
-	return NextResponse.json({ ...newToken })
+	return NextResponse.json({ id: newToken.id })
 }
