@@ -7,8 +7,9 @@ export async function POST(request: Request): Promise<NextResponse> {
 	const filename = searchParams.get('filename')
 	const name = searchParams.get('name')
 	const symbol = searchParams.get('symbol')
+	const description = searchParams.get('description')
 
-	if (!filename || !name || !symbol || !request.body) {
+	if (!filename || !name || !symbol || !description || !request.body) {
 		return NextResponse.json({ data: {} })
 	}
 
@@ -21,8 +22,11 @@ export async function POST(request: Request): Promise<NextResponse> {
 			name,
 			symbol,
 			image: blob.url,
+			description,
 		},
 	})
+
+	console.log(newToken)
 
 	return NextResponse.json({ id: newToken.id })
 }
