@@ -15,6 +15,7 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { imageUpload } from './utils/image_upload'
+import { MintButton } from './comps/mint_button'
 
 export default function Page() {
 	const {
@@ -48,7 +49,7 @@ export default function Page() {
 
 			const { symbol, name, image } = submission.value
 
-			const data = await imageUpload(image, name, symbol)
+			const data = await imageUpload(image, name, symbol, 'test description')
 
 			const uri = `${window.location.origin}/api/metadata/${data.id}`
 			console.log(uri)
@@ -130,12 +131,7 @@ export default function Page() {
 							view transaction
 						</AnchorTag>
 
-						<button
-							className="ml-auto text-teal-300 text-sm text-decoration-line: underline"
-							onClick={() => mintSomeTokens()}
-						>
-							mint tokens
-						</button>
+						<MintButton mintSomeTokens={mintSomeTokens} />
 					</>
 				) : null}
 			</div>
