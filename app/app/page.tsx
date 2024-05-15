@@ -23,7 +23,7 @@ export default function Page() {
 		isLoading,
 	} = useAsync<string | undefined>()
 
-	const { createSplToken } = useSplTokenMinter()
+	const { createSplToken, mintSomeTokens } = useSplTokenMinter()
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -125,9 +125,18 @@ export default function Page() {
 
 			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
 				{href ? (
-					<AnchorTag className="ml-auto" href={href}>
-						view transaction
-					</AnchorTag>
+					<>
+						<AnchorTag className="ml-auto" href={href}>
+							view transaction
+						</AnchorTag>
+
+						<button
+							className="ml-auto text-teal-300 text-sm text-decoration-line: underline"
+							onClick={() => mintSomeTokens()}
+						>
+							mint tokens
+						</button>
+					</>
 				) : null}
 			</div>
 		</>
