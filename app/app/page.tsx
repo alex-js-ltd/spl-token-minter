@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
-import { put } from '@vercel/blob'
+import { put, type PutBlobResult } from '@vercel/blob'
 
 export default function Page() {
 	const [form, fields] = useForm({
@@ -47,9 +47,15 @@ export default function Page() {
 
 			const { image } = submission.value
 
-			const blob = await put(image.name, image, { access: 'public' })
+			const response = await fetch(`/api/upload?filename=${image.name}`, {
+				method: 'POST',
+				body: image,
+			})
 
-			console.log(blob)
+			alert(JSON.stringify(response))
+			const newBlob = (await response.json()) as PutBlobResult
+
+			console.log('new blob', newBlob)
 			alert(JSON.stringify(submission))
 		},
 	})
