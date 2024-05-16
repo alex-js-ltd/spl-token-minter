@@ -56,6 +56,8 @@ function Background({ children }: { children: ReactNode }) {
 						>
 							Generate. Mint. Degen.
 						</h2>
+
+						<p>Generate SPL tokens on Solana </p>
 					</div>
 
 					{children}
