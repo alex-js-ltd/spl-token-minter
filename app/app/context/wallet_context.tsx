@@ -19,6 +19,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 		[network],
 	)
 
+	console.log(network)
 	return (
 		<ConnectionProvider endpoint={selectedEndpoint}>
 			<UnifiedWalletProvider
