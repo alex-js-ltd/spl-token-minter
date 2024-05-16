@@ -16,7 +16,7 @@ import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { imageUpload } from './utils/image_upload'
 import { MintButton } from './comps/mint_button'
-import { useRef } from 'react'
+import { useRef, useCallback } from 'react'
 import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
 
 export default function Page() {
@@ -71,12 +71,12 @@ export default function Page() {
 
 	const fileRef = useRef<HTMLInputElement>(null)
 
-	function clearPreviewImage() {
+	const clearPreviewImage = useCallback(() => {
 		if (fileRef.current) {
 			fileRef.current.value = ''
 			setPreviewImage(undefined)
 		}
-	}
+	}, [])
 
 	return (
 		<>
