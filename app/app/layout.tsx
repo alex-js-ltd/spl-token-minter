@@ -34,7 +34,7 @@ export default function RootLayout({
 }
 function Background({ children }: { children: ReactNode }) {
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-between p-24">
+		<main className="flex min-h-screen flex-col items-center justify-between p-0">
 			<div className="relative mb-4 flex items-center justify-center py-[26vh] pt-[18vh] text-gray-900 sm:pt-[26vh] w-full">
 				<div className="absolute inset-0 flex items-center justify-center overflow-hidden">
 					<div className="relative mb-72 h-full w-full min-w-[29rem] max-w-[96rem] sm:mb-0">
