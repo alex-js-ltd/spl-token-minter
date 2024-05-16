@@ -1,7 +1,11 @@
 import { useAnchorProgram } from './use_anchor_program'
-import { Keypair } from '@solana/web3.js'
+import { Keypair, Transaction } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
-import { useAnchorWallet } from '@jup-ag/wallet-adapter'
+import {
+	useAnchorWallet,
+	useConnection,
+	useWallet,
+} from '@jup-ag/wallet-adapter'
 import { useMemo } from 'react'
 import * as anchor from '@coral-xyz/anchor'
 
@@ -12,6 +16,7 @@ const metadata = {
 }
 
 export function useSplTokenMinter() {
+	const { connection } = useConnection()
 	const program = useAnchorProgram()
 
 	const payer = useAnchorWallet()
@@ -32,8 +37,35 @@ export function useSplTokenMinter() {
 				payer: payer.publicKey,
 				mintAccount: mintKeypair.publicKey,
 			})
-			.signers([mintKeypair])
-			.rpc()
+			.transaction()
+	}
+
+	const { sendTransaction } = useWallet()
+
+	async function sendAndConfirmTransaction(
+		transactionBuilder: () => Promise<Transaction | undefined>,
+	) {
+		try {
+			const tx = await transactionBuilder()
+
+			if (!tx) return
+			const txSig = await sendTransaction(tx, connection, {
+				signers: [mintKeypair],
+			})
+
+			const { blockhash, lastValidBlockHeight } =
+				await connection.getLatestBlockhash()
+
+			const res = await connection.confirmTransaction({
+				blockhash,
+				lastValidBlockHeight,
+				signature: txSig,
+			})
+
+			return res
+		} catch (error) {
+			console.error('Error processing transaction:', error)
+		}
 	}
 
 	async function mintSomeTokens() {
@@ -59,5 +91,5 @@ export function useSplTokenMinter() {
 			.rpc()
 	}
 
-	return { createSplToken, mintSomeTokens }
+	return { createSplToken, mintSomeTokens, sendAndConfirmTransaction }
 }

@@ -19,13 +19,10 @@ import { MintButton } from './comps/mint_button'
 import { useRef } from 'react'
 
 export default function Page() {
-	const {
-		run,
-		data: transactionSignature,
-		isLoading,
-	} = useAsync<string | undefined>()
+	const { run, data: transactionSignature, isLoading } = useAsync()
 
-	const { createSplToken, mintSomeTokens } = useSplTokenMinter()
+	const { createSplToken, mintSomeTokens, sendAndConfirmTransaction } =
+		useSplTokenMinter()
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -54,7 +51,9 @@ export default function Page() {
 
 			const uri = `${window.location.origin}/api/metadata/${id}`
 
-			run(createSplToken({ name, symbol, uri }))
+			const promise = createSplToken({ name, symbol, uri })
+
+			run(sendAndConfirmTransaction(() => promise))
 		},
 	})
 
