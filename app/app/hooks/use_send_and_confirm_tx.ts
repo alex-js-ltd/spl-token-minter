@@ -1,6 +1,5 @@
+import type { Transaction, Signer } from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
-
-import { type Transaction, type Signer } from '@solana/web3.js'
 
 export function useSendAndConfirmTransaction() {
 	const { connection } = useConnection()

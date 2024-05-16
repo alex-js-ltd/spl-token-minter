@@ -1,11 +1,7 @@
 import { useAnchorProgram } from './use_anchor_program'
-import { Keypair, Transaction } from '@solana/web3.js'
+import { Keypair } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
-import {
-	useAnchorWallet,
-	useConnection,
-	useWallet,
-} from '@jup-ag/wallet-adapter'
+import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useMemo } from 'react'
 import * as anchor from '@coral-xyz/anchor'
 
