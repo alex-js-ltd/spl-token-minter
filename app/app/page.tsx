@@ -17,12 +17,14 @@ import { Field } from '@/app/comps/field'
 import { imageUpload } from './utils/image_upload'
 import { MintButton } from './comps/mint_button'
 import { useRef } from 'react'
+import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
 
 export default function Page() {
 	const { run, data: transactionSignature, isLoading } = useAsync()
 
-	const { createSplToken, mintSomeTokens, sendAndConfirmTransaction } =
-		useSplTokenMinter()
+	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
+
+	const { sendAndConfirmTx } = useSendAndConfirmTransaction()
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -51,9 +53,11 @@ export default function Page() {
 
 			const uri = `${window.location.origin}/api/metadata/${id}`
 
-			const promise = createSplToken({ name, symbol, uri })
+			const tx = await createSplToken({ name, symbol, uri })
 
-			run(sendAndConfirmTransaction(() => promise))
+			if (!tx) return
+
+			run(sendAndConfirmTx(tx, [mintKeypair]))
 		},
 	})
 
@@ -153,6 +157,9 @@ export default function Page() {
 			</div>
 
 			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
+				{isLoading ? (
+					<AnchorTag className="ml-auto">...loading</AnchorTag>
+				) : null}
 				{href ? (
 					<>
 						<AnchorTag className="ml-auto" href={href}>

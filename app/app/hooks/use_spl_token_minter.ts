@@ -16,7 +16,6 @@ const metadata = {
 }
 
 export function useSplTokenMinter() {
-	const { connection } = useConnection()
 	const program = useAnchorProgram()
 
 	const payer = useAnchorWallet()
@@ -40,34 +39,6 @@ export function useSplTokenMinter() {
 			.transaction()
 	}
 
-	const { sendTransaction } = useWallet()
-
-	async function sendAndConfirmTransaction(
-		transactionBuilder: () => Promise<Transaction | undefined>,
-	) {
-		try {
-			const tx = await transactionBuilder()
-
-			if (!tx) return
-			const txSig = await sendTransaction(tx, connection, {
-				signers: [mintKeypair],
-			})
-
-			const { blockhash, lastValidBlockHeight } =
-				await connection.getLatestBlockhash()
-
-			const res = await connection.confirmTransaction({
-				blockhash,
-				lastValidBlockHeight,
-				signature: txSig,
-			})
-
-			return res
-		} catch (error) {
-			console.error('Error processing transaction:', error)
-		}
-	}
-
 	async function mintSomeTokens() {
 		if (!payer || !program) return
 		// Derive the associated token address account for the mint and payer.
@@ -88,8 +59,12 @@ export function useSplTokenMinter() {
 				mintAccount: mintKeypair.publicKey,
 				associatedTokenAccount: associatedTokenAccountAddress,
 			})
-			.rpc()
+			.transaction()
 	}
 
-	return { createSplToken, mintSomeTokens, sendAndConfirmTransaction }
+	return {
+		createSplToken,
+		mintSomeTokens,
+		mintKeypair,
+	}
 }
