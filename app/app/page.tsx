@@ -50,9 +50,9 @@ export default function Page() {
 
 			const { image, name, symbol, description } = submission.value
 
-			const data = await imageUpload(image, name, symbol, description)
+			const { id } = await imageUpload(image, name, symbol, description)
 
-			const uri = `${window.location.origin}/api/metadata/${data.id}`
+			const uri = `${window.location.origin}/api/metadata/${id}`
 
 			run(createSplToken({ name, symbol, uri }))
 		},
