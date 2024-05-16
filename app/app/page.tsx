@@ -16,6 +16,7 @@ import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { imageUpload } from './utils/image_upload'
 import { MintButton } from './comps/mint_button'
+import { useRef } from 'react'
 
 export default function Page() {
 	const {
@@ -65,12 +66,21 @@ export default function Page() {
 		undefined,
 	)
 
+	const fileRef = useRef<HTMLInputElement>(null)
+
+	function clearPreviewImage() {
+		if (fileRef.current) {
+			fileRef.current.value = ''
+			setPreviewImage(undefined)
+		}
+	}
+
 	return (
 		<>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<PreviewImage
 					src={previewImage}
-					setPreviewImage={setPreviewImage}
+					clearPreviewImage={clearPreviewImage}
 					errors={fields.image.errors}
 				/>
 
@@ -127,6 +137,7 @@ export default function Page() {
 								<ImageChooser
 									name={fields.image.name}
 									setPreviewImage={setPreviewImage}
+									fileRef={fileRef}
 								/>
 							</div>
 
