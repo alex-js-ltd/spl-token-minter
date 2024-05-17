@@ -17,11 +17,12 @@ import { useRef, useCallback } from 'react'
 import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
 import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
+import { getErrorMessage } from './utils/misc'
 
 const { CLUSTER } = getEnv()
 
 export default function Page() {
-	const { run, data: transactionSignature, isLoading } = useAsync()
+	const { run, data: txSig, isLoading, error, isError } = useAsync()
 
 	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
 
@@ -62,8 +63,8 @@ export default function Page() {
 		},
 	})
 
-	const href = transactionSignature
-		? `https://explorer.solana.com/tx/${transactionSignature}?cluster=${CLUSTER}`
+	const href = txSig
+		? `https://explorer.solana.com/tx/${txSig}?cluster=${CLUSTER}`
 		: undefined
 
 	const [previewImage, setPreviewImage] = useState<string | undefined>(
@@ -160,6 +161,12 @@ export default function Page() {
 
 						<MintButton mintSomeTokens={mintSomeTokens} />
 					</>
+				) : null}
+
+				{isError ? (
+					<p className="text-teal-300 text-sm ml-auto ">
+						{getErrorMessage(error)}
+					</p>
 				) : null}
 			</div>
 		</>
