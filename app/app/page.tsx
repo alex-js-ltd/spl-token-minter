@@ -17,12 +17,11 @@ import { useRef, useCallback } from 'react'
 import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
 import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
-import { getErrorMessage } from './utils/misc'
 
 const { CLUSTER } = getEnv()
 
 export default function Page() {
-	const { run, data: txSig, isLoading, error, isError } = useAsync()
+	const { run, data: txSig, isLoading } = useAsync()
 
 	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
 
@@ -55,6 +54,7 @@ export default function Page() {
 
 			const uri = `${window.location.origin}/api/metadata/${id}`
 
+			console.log(uri)
 			const tx = await createSplToken(decimals, name, symbol, uri)
 
 			if (!tx) return
@@ -161,12 +161,6 @@ export default function Page() {
 
 						<MintButton mintSomeTokens={mintSomeTokens} />
 					</>
-				) : null}
-
-				{isError ? (
-					<p className="text-teal-300 text-sm ml-auto ">
-						{getErrorMessage(error)}
-					</p>
 				) : null}
 			</div>
 		</>
