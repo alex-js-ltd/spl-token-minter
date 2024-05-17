@@ -152,9 +152,6 @@ export default function Page() {
 			</div>
 
 			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
-				{isLoading ? (
-					<AnchorTag className="ml-auto">...loading</AnchorTag>
-				) : null}
 				{href ? (
 					<>
 						<AnchorTag className="ml-auto" href={href}>
