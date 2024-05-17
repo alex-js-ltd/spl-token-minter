@@ -21,8 +21,9 @@ import { SubmitButton } from './comps/submit_button'
 const { CLUSTER } = getEnv()
 
 export default function Page() {
-	const { run, data: txSig, isLoading } = useAsync()
+	const { run, data: txSig, isLoading, error } = useAsync()
 
+	console.log('tx error', error)
 	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
 
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
@@ -162,6 +163,8 @@ export default function Page() {
 						<MintButton mintSomeTokens={mintSomeTokens} />
 					</>
 				) : null}
+
+				<p className="ml-auto text-teal-300">{error?.message}</p>
 			</div>
 		</>
 	)

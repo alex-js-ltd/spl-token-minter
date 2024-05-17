@@ -1,6 +1,6 @@
 import { type Transaction } from '@solana/web3.js'
 import { useAsync } from '@/app/hooks/use_async'
-import { useSendAndConfirmTransaction } from '@/app/hooks/use_send_and_confirm_tx'
+import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 
 export function MintButton({
 	mintSomeTokens,
@@ -9,7 +9,7 @@ export function MintButton({
 }) {
 	const { run, data, isLoading, error } = useAsync()
 
-	const { sendAndConfirmTx } = useSendAndConfirmTransaction()
+	const { sendAndConfirmTx } = useSendAndConfirmTx()
 
 	async function onClick() {
 		const tx = await mintSomeTokens()
@@ -17,14 +17,17 @@ export function MintButton({
 	}
 
 	console.log('mint', data)
-	console.log(error)
+	console.log('tx error', error)
 
 	return (
-		<button
-			onClick={() => onClick()}
-			className="ml-auto text-teal-300 text-sm text-decoration-line: underline"
-		>
-			mint tokens
-		</button>
+		<>
+			<button
+				onClick={() => onClick()}
+				className="ml-auto text-teal-300 text-sm text-decoration-line: underline"
+			>
+				mint tokens
+			</button>
+			<p className="ml-auto text-teal-300">{error?.message}</p>
+		</>
 	)
 }
