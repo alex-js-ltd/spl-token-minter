@@ -17,7 +17,7 @@ export function MintButton({
 	}
 
 	console.log('mint', data)
-	console.log('tx error', error)
+	console.log('tx error for min program', error)
 
 	return (
 		<>
