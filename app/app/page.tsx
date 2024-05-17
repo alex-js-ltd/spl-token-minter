@@ -18,6 +18,9 @@ import { imageUpload } from './utils/image_upload'
 import { MintButton } from './comps/mint_button'
 import { useRef, useCallback } from 'react'
 import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
+import { getEnv } from './utils/env'
+
+const { CLUSTER } = getEnv()
 
 export default function Page() {
 	const { run, data: transactionSignature, isLoading } = useAsync()
@@ -62,7 +65,7 @@ export default function Page() {
 	})
 
 	const href = transactionSignature
-		? `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+		? `https://explorer.solana.com/tx/${transactionSignature}?cluster=${CLUSTER}`
 		: undefined
 
 	const [previewImage, setPreviewImage] = useState<string | undefined>(
