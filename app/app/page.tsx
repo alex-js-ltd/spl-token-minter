@@ -1,8 +1,5 @@
 'use client'
 
-import { Button } from '@/app/comps/button'
-import { Icon } from '@/app/comps/_icon'
-
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
@@ -19,6 +16,7 @@ import { MintButton } from './comps/mint_button'
 import { useRef, useCallback } from 'react'
 import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
 import { getEnv } from './utils/env'
+import { SubmitButton } from './comps/submit_button'
 
 const { CLUSTER } = getEnv()
 
@@ -147,13 +145,7 @@ export default function Page() {
 								/>
 							</div>
 
-							<Button
-								disabled={isLoading ? true : false}
-								className="ml-auto"
-								type="submit"
-							>
-								<Icon name="arrow-up" className="w-6 h-6" />
-							</Button>
+							<SubmitButton isLoading={isLoading} />
 						</div>
 					</div>
 				</form>
