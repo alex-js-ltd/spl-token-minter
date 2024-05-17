@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/spl_token_minter.json`.
  */
 export type SplTokenMinter = {
-  "address": "E89WUoko2DEzR6cXoXhnApyrQtQQifYcTWa5RsP9E3jU",
+  "address": "GJ82nHsPWrqgciqXbNvL22oSw76jiPrNCkYuqgYgPHpC",
   "metadata": {
     "name": "splTokenMinter",
     "version": "0.1.0",
@@ -87,6 +87,10 @@ export type SplTokenMinter = {
         }
       ],
       "args": [
+        {
+          "name": "tokenDecimals",
+          "type": "u8"
+        },
         {
           "name": "tokenName",
           "type": "string"

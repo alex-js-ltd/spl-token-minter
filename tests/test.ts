@@ -21,7 +21,7 @@ describe("SPL Token Minter", () => {
 
   it("Create an SPL Token!", async () => {
     const transactionSignature = await program.methods
-      .createToken(metadata.name, metadata.symbol, metadata.uri)
+      .createToken(9, metadata.name, metadata.symbol, metadata.uri)
       .accounts({
         payer: payer.publicKey,
         mintAccount: mintKeypair.publicKey,

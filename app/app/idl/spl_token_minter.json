@@ -1,5 +1,5 @@
 {
-  "address": "E89WUoko2DEzR6cXoXhnApyrQtQQifYcTWa5RsP9E3jU",
+  "address": "GJ82nHsPWrqgciqXbNvL22oSw76jiPrNCkYuqgYgPHpC",
   "metadata": {
     "name": "spl_token_minter",
     "version": "0.1.0",
@@ -81,6 +81,10 @@
         }
       ],
       "args": [
+        {
+          "name": "_token_decimals",
+          "type": "u8"
+        },
         {
           "name": "token_name",
           "type": "string"

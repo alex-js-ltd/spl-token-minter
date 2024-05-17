@@ -10,6 +10,7 @@ use {
 };
 
 #[derive(Accounts)]
+#[instruction(_token_decimals: u8)]
 pub struct CreateToken<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -17,7 +18,7 @@ pub struct CreateToken<'info> {
     #[account(
         init,
         payer = payer,
-        mint::decimals = 9,
+        mint::decimals = _token_decimals,
         mint::authority = payer.key(),
         mint::freeze_authority = payer.key(),
 
@@ -40,6 +41,7 @@ pub struct CreateToken<'info> {
 
 pub fn create_token(
     ctx: Context<CreateToken>,
+    _token_decimals: u8,
     token_name: String,
     token_symbol: String,
     token_uri: String,

@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-spl_token_minter = "E89WUoko2DEzR6cXoXhnApyrQtQQifYcTWa5RsP9E3jU"
+spl_token_minter = "GJ82nHsPWrqgciqXbNvL22oSw76jiPrNCkYuqgYgPHpC"
 
 [programs.localnet]
 spl_token_minter = "4M3TfMCo6rPt3Ep2uK8KyfiArp28L4yvPcm8YDwBVKG8"
