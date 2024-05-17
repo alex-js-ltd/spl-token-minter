@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 const schema = z.object({
-	NODE_ENV: z.enum(['production', 'development', 'test'] as const),
-	CLUSTER: z.enum(['devnet', 'mainnet-beta'] as const),
+	NEXT_PUBLIC_CLUSTER: z.enum(['devnet', 'mainnet-beta'] as const),
 })
 
 declare global {
@@ -18,18 +17,7 @@ declare global {
  * @returns all public ENV variables
  */
 export function getEnv() {
-	const parsed = schema.safeParse(process.env)
-
-	if (parsed.success === false) {
-		console.error(
-			'❌ Invalid environment variables:',
-			parsed.error.flatten().fieldErrors,
-		)
-
-		throw new Error('Invalid envirmonment variables')
-	}
-
-	return parsed.data
+	return { CLUSTER: process.env.NEXT_PUBLIC_CLUSTER }
 }
 
 type ENV = ReturnType<typeof getEnv>
