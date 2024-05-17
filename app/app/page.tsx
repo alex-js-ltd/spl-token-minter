@@ -14,7 +14,7 @@ import { Field } from '@/app/comps/field'
 import { imageUpload } from './utils/image_upload'
 import { MintButton } from './comps/mint_button'
 import { useRef, useCallback } from 'react'
-import { useSendAndConfirmTransaction } from './hooks/use_send_and_confirm_tx'
+import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
 import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
 
@@ -25,7 +25,7 @@ export default function Page() {
 
 	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
 
-	const { sendAndConfirmTx } = useSendAndConfirmTransaction()
+	const { sendAndConfirmTx } = useSendAndConfirmTx()
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
