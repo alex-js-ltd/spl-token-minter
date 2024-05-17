@@ -9,16 +9,7 @@
   "instructions": [
     {
       "name": "create_token",
-      "discriminator": [
-        84,
-        52,
-        204,
-        228,
-        24,
-        140,
-        234,
-        75
-      ],
+      "discriminator": [84, 52, 204, 228, 24, 140, 234, 75],
       "accounts": [
         {
           "name": "payer",
@@ -37,16 +28,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
+                "value": [109, 101, 116, 97, 100, 97, 116, 97]
               },
               {
                 "kind": "account",
@@ -101,16 +83,7 @@
     },
     {
       "name": "mint_token",
-      "discriminator": [
-        172,
-        137,
-        183,
-        14,
-        207,
-        110,
-        234,
-        56
-      ],
+      "discriminator": [172, 137, 183, 14, 207, 110, 234, 56],
       "accounts": [
         {
           "name": "mint_authority",

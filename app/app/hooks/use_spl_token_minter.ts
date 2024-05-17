@@ -18,16 +18,17 @@ export function useSplTokenMinter() {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	async function createSplToken(metadata: {
-		name: string
-		symbol: string
-		uri: string
-	}) {
+	async function createSplToken(
+		tokenDecimals: number,
+		tokenName: string,
+		tokenSymbol: string,
+		tokenUri: string,
+	) {
 		if (!payer || !program) return
 
 		// SPL Token default = 9 decimals
 		return program.methods
-			.createToken(metadata.name, metadata.symbol, metadata.uri)
+			.createToken(tokenDecimals, tokenName, tokenSymbol, tokenUri)
 			.accounts({
 				payer: payer.publicKey,
 				mintAccount: mintKeypair.publicKey,
