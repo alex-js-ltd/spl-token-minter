@@ -8,6 +8,9 @@ import {
 } from '@jup-ag/wallet-adapter'
 import { useNetworkConfiguration } from './network_context'
 import { clusterApiUrl } from '@solana/web3.js'
+import { getEnv } from '@/app/utils/env'
+
+const { CLUSTER } = getEnv()
 
 export function WalletProvider({ children }: { children: ReactNode }) {
 	const { networkConfiguration } = useNetworkConfiguration()
@@ -19,14 +22,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 		[network],
 	)
 
-	console.log(network)
 	return (
 		<ConnectionProvider endpoint={selectedEndpoint}>
 			<UnifiedWalletProvider
 				wallets={[]}
 				config={{
 					autoConnect: false,
-					env: 'devnet',
+					env: CLUSTER,
 					metadata: {
 						name: 'UnifiedWallet',
 						description: 'UnifiedWallet',
