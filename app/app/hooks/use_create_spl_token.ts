@@ -13,7 +13,7 @@ type TokenData = {
 	name: string
 	symbol: string
 }
-export function useSplToken({ data }: { data?: TokenData }) {
+export function useCreateSplToken({ data }: { data?: TokenData }) {
 	const program = useAnchorProgram()
 
 	const payer = useAnchorWallet()
@@ -31,6 +31,7 @@ export function useSplToken({ data }: { data?: TokenData }) {
 		invariant(mintKeypair)
 
 		const uri = `${window.location.origin}/api/metadata/${data?.id}`
+
 		const tx = program.methods
 			.createToken(data.decimals, data.name, data.symbol, uri)
 			.accounts({

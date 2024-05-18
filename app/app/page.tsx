@@ -5,13 +5,10 @@ import { parseWithZod } from '@conform-to/zod'
 
 import { MetaData } from '@/app/utils/schemas'
 import { useAsync } from '@/app/hooks/use_async'
-import { useSplTokenMinter } from '@/app/hooks/use_spl_token_minter'
-import { AnchorTag } from '@/app/comps/anchor_tag'
 import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
-import { imageUpload } from './utils/image_upload'
 import { MintButton } from './comps/mint_button'
 import { useRef, useCallback } from 'react'
 import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
@@ -21,7 +18,7 @@ import { SubmitButton } from './comps/submit_button'
 import { uploadMetadata } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
 import { useEffect, use } from 'react'
-import { useSplToken } from '@/app/hooks/use_spl_token'
+import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
 
 const { CLUSTER } = getEnv()
 
@@ -59,9 +56,9 @@ export default function Page() {
 	}, [])
 
 	const { data } = lastResult
-	const { tx, mintKeypair } = useSplToken({ data })
+	const { tx, mintKeypair } = useCreateSplToken({ data })
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
-	const { run, isLoading } = useAsync()
+	const { run, isLoading, isSuccess } = useAsync()
 
 	useEffect(() => {
 		if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
@@ -140,7 +137,9 @@ export default function Page() {
 				</form>
 			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl"></div>
+			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
+				{isSuccess ? <MintButton mintKeypair={mintKeypair} /> : null}
+			</div>
 		</>
 	)
 }

@@ -12,9 +12,8 @@ export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
 	const { publicKey } = wallet || {}
 
-	const disabled = !publicKey ? true : false
-
 	const { pending } = useFormStatus()
+	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
 		<Button type="submit" disabled={disabled} {...rest}>
