@@ -1,4 +1,4 @@
-import { Keypair, type Transaction } from '@solana/web3.js'
+import { Keypair } from '@solana/web3.js'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useMintSomeTokens } from '../hooks/use_mint_some_tokens'
@@ -20,6 +20,7 @@ export function MintButton({ mintKeypair }: { mintKeypair: Keypair }) {
 	return (
 		<>
 			<button
+				disabled={isLoading}
 				onClick={handleClick}
 				className="ml-auto text-teal-300 text-sm text-decoration-line: underline"
 			>
