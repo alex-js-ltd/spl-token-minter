@@ -24,7 +24,7 @@ export function useMintSomeTokens({ mintKeypair }: { mintKeypair: Keypair }) {
 		)
 
 		// Amount of tokens to mint.
-		const amount = new anchor.BN(100)
+		const amount = new anchor.BN(1000000000)
 
 		const tx = program.methods
 			.mintToken(amount)
