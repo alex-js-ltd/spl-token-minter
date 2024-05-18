@@ -2,7 +2,7 @@ import { put } from '@vercel/blob'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/utils/db'
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: Request) {
 	const { searchParams } = new URL(request.url)
 	const filename = searchParams.get('filename')
 	const name = searchParams.get('name')
@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
 	if (!filename || !name || !symbol || !description || !request.body) {
 		return NextResponse.json(
-			{ error: 'Internal Server Error' },
+			{ error: 'Missing search params' },
 			{ status: 500 },
 		)
 	}
@@ -29,5 +29,5 @@ export async function POST(request: Request): Promise<NextResponse> {
 		},
 	})
 
-	return NextResponse.json({ id: metadata.id }, { status: 200 })
+	return NextResponse.json({ id: metadata.id })
 }
