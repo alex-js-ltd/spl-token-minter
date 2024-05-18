@@ -10,14 +10,17 @@ export async function POST(request: Request): Promise<NextResponse> {
 	const description = searchParams.get('description')
 
 	if (!filename || !name || !symbol || !description || !request.body) {
-		return NextResponse.json({ data: {} })
+		return NextResponse.json(
+			{ error: 'Internal Server Error' },
+			{ status: 500 },
+		)
 	}
 
 	const blob = await put(filename, request.body, {
 		access: 'public',
 	})
 
-	const newToken = await prisma.tokenMetaData.create({
+	const metadata = await prisma.tokenMetaData.create({
 		data: {
 			name,
 			symbol,
@@ -26,7 +29,5 @@ export async function POST(request: Request): Promise<NextResponse> {
 		},
 	})
 
-	console.log(newToken)
-
-	return NextResponse.json({ id: newToken.id })
+	return NextResponse.json({ id: metadata.id }, { status: 200 })
 }
