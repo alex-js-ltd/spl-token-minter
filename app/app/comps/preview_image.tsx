@@ -1,7 +1,7 @@
 'use client'
 
 import type { ListOfErrors } from './field'
-import { cn } from '../utils/misc'
+import { cn } from '@/app/utils/misc'
 import { Icon } from './_icon'
 
 type PreviewImageProps = {
@@ -35,8 +35,6 @@ export function PreviewImage({
 						<>
 							<button
 								className="inline-flex shrink-0 items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 shadow-sm absolute -right-1.5 -top-1.5 z-10 h-4 w-4 rounded-full border border-gray-900 bg-gray-100 text-gray-900 opacity-0 transition-opacity hover:bg-gray-200 group-hover:opacity-100"
-								data-id="prompt-form-image-remove-button"
-								data-state="closed"
 								onClick={clearPreviewImage}
 							>
 								<span className="sr-only">Remove image</span>
@@ -46,7 +44,6 @@ export function PreviewImage({
 								<img
 									alt="your uploaded image"
 									className="relative aspect-[48/44] object-cover object-center"
-									data-id="prompt-form-image-preview-image"
 									src={src}
 								/>
 							</div>
