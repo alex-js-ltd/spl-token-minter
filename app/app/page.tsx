@@ -32,7 +32,6 @@ export default function Page() {
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
 		onValidate({ formData }) {
-			console.log(formData)
 			return parseWithZod(formData, { schema: MetaData })
 		},
 
