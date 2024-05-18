@@ -18,14 +18,19 @@ import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
 import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
 
+import { uploadMetadata } from '@/app/utils/actions'
+import { useFormState } from 'react-dom'
+import { useEffect, use } from 'react'
+import { useSplToken } from '@/app/hooks/use_spl_token'
+
 const { CLUSTER } = getEnv()
 
+const initialState = {
+	data: undefined,
+}
+
 export default function Page() {
-	const { run, data: txSig, isLoading, error } = useAsync()
-
-	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
-
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	const [lastResult, action] = useFormState(uploadMetadata, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -37,34 +42,8 @@ export default function Page() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onSubmit',
 
-		async onSubmit(e, { formData }) {
-			e.preventDefault()
-
-			const submission = parseWithZod(formData, {
-				schema: MetaData,
-			})
-
-			if (submission.status !== 'success') {
-				return submission.reply()
-			}
-
-			const { image, name, symbol, description, decimals } = submission.value
-
-			const data = await imageUpload(image, name, symbol, description)
-
-			const uri = `${window.location.origin}/api/metadata/${data?.id}`
-
-			const tx = await createSplToken(decimals, name, symbol, uri)
-
-			if (!tx) return
-
-			run(sendAndConfirmTx(tx, [mintKeypair]))
-		},
+		lastResult,
 	})
-
-	const href = txSig
-		? `https://explorer.solana.com/tx/${txSig}?cluster=${CLUSTER}`
-		: undefined
 
 	const [previewImage, setPreviewImage] = useState<string | undefined>(
 		undefined,
@@ -79,6 +58,16 @@ export default function Page() {
 		}
 	}, [])
 
+	const { data } = lastResult
+	const { tx } = useSplToken({ ...data })
+	const { run, isLoading } = useAsync()
+	const { sendAndConfirmTx } = useSendAndConfirmTx()
+
+	console.log(data)
+	useEffect(() => {
+		if (tx) run(sendAndConfirmTx(tx))
+	}, [run, sendAndConfirmTx, tx])
+
 	return (
 		<>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
@@ -91,6 +80,7 @@ export default function Page() {
 				<form
 					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-3 md:py-4"
 					{...getFormProps(form)}
+					action={action}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
 						<div className="relative grid grid-cols-1 sm:grid-cols-3 w-full">
@@ -151,19 +141,7 @@ export default function Page() {
 				</form>
 			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
-				{href ? (
-					<>
-						<AnchorTag className="ml-auto" href={href}>
-							view transaction
-						</AnchorTag>
-
-						<MintButton mintSomeTokens={mintSomeTokens} />
-					</>
-				) : null}
-
-				<p className="ml-auto text-teal-300">{error?.message}</p>
-			</div>
+			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl"></div>
 		</>
 	)
 }

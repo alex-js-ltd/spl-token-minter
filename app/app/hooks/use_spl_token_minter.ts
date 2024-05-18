@@ -2,7 +2,7 @@ import { useAnchorProgram } from './use_anchor_program'
 import { Keypair } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import * as anchor from '@coral-xyz/anchor'
 
 const metadata = {
@@ -18,23 +18,24 @@ export function useSplTokenMinter() {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	async function createSplToken(
-		tokenDecimals: number,
-		tokenName: string,
-		tokenSymbol: string,
-		tokenUri: string,
-	) {
-		if (!payer || !program) return
-
-		// SPL Token default = 9 decimals
-		return program.methods
-			.createToken(tokenDecimals, tokenName, tokenSymbol, tokenUri)
-			.accounts({
-				payer: payer.publicKey,
-				mintAccount: mintKeypair.publicKey,
-			})
-			.transaction()
-	}
+	const createSplToken = useCallback(
+		(
+			tokenDecimals: number,
+			tokenName: string,
+			tokenSymbol: string,
+			tokenUri: string,
+		) => {
+			if (!program || !payer) return
+			return program.methods
+				.createToken(tokenDecimals, tokenName, tokenSymbol, tokenUri)
+				.accounts({
+					payer: payer.publicKey,
+					mintAccount: mintKeypair.publicKey,
+				})
+				.transaction()
+		},
+		[program, payer],
+	)
 
 	async function mintSomeTokens() {
 		if (!payer || !program) return
