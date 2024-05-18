@@ -23,7 +23,6 @@ const { CLUSTER } = getEnv()
 export default function Page() {
 	const { run, data: txSig, isLoading, error } = useAsync()
 
-	console.log('tx error', error)
 	const { createSplToken, mintSomeTokens, mintKeypair } = useSplTokenMinter()
 
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
@@ -52,10 +51,9 @@ export default function Page() {
 			const { image, name, symbol, description, decimals } = submission.value
 
 			const data = await imageUpload(image, name, symbol, description)
-			console.log(data)
+
 			const uri = `${window.location.origin}/api/metadata/${data?.id}`
 
-			console.log(uri)
 			const tx = await createSplToken(decimals, name, symbol, uri)
 
 			if (!tx) return
