@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 		access: 'public',
 	})
 
-	invariantResponse(blob, 'Failed to upload image', { status: 404 })
+	invariantResponse(blob, 'Failed to upload image', { status: 500 })
 
 	const metadata = await prisma.tokenMetaData.create({
 		data: {
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 		},
 	})
 
-	invariantResponse(metadata, 'Failed to store token metadata', { status: 404 })
+	invariantResponse(metadata, 'Failed to store token metadata', { status: 500 })
 
 	return NextResponse.json({ id: metadata.id })
 }
