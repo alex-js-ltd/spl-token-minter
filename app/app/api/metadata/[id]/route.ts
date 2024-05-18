@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/utils/db'
+import { invariantResponse } from '@/app/utils/misc'
 
 export async function GET(
 	_request: Request,
 	{ params }: { params: { id: string } },
-): Promise<NextResponse> {
-	if (!params.id) return NextResponse.json({ status: 500 })
+) {
+	invariantResponse(params.id, 'Missing id', { status: 404 })
 
 	const token = await prisma.tokenMetaData.findUnique({
 		where: {
@@ -13,7 +14,7 @@ export async function GET(
 		},
 	})
 
-	if (!token) return NextResponse.json({})
+	invariantResponse(token, 'Failed to retrieve token metadata', { status: 500 })
 
 	const { id, ...rest } = token
 
