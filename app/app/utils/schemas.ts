@@ -11,3 +11,10 @@ export const MetaData = z.object({
 	}, 'File size must be less than 3MB'),
 	decimals: z.number(),
 })
+
+export const ImageUpload = z.object({
+	filename: z.string().min(1),
+	name: z.string().min(1),
+	symbol: z.string().min(1),
+	description: z.string().min(1),
+})
