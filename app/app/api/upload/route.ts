@@ -1,9 +1,9 @@
 import { parseWithZod } from '@conform-to/zod'
 import { ImageUpload } from '@/app/utils/schemas'
-
 import { put } from '@vercel/blob'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/utils/db'
+import { invariantResponse } from '@/app/utils/misc'
 
 export async function POST(request: Request) {
 	const { searchParams } = new URL(request.url)
@@ -12,18 +12,19 @@ export async function POST(request: Request) {
 		schema: ImageUpload,
 	})
 
-	if (submission.status !== 'success' || !request.body) {
-		return NextResponse.json(
-			{ error: submission.reply().error },
-			{ status: 500 },
-		)
-	}
+	invariantResponse(submission.status === 'success', 'Missing search params', {
+		status: 404,
+	})
+
+	invariantResponse(request.body, 'Missing image file', { status: 404 })
 
 	const { filename, name, symbol, description } = submission.value
 
 	const blob = await put(filename, request.body, {
 		access: 'public',
 	})
+
+	invariantResponse(blob, 'Failed to upload image', { status: 404 })
 
 	const metadata = await prisma.tokenMetaData.create({
 		data: {
@@ -33,6 +34,8 @@ export async function POST(request: Request) {
 			description,
 		},
 	})
+
+	invariantResponse(metadata, 'Failed to store token metadata', { status: 404 })
 
 	return NextResponse.json({ id: metadata.id })
 }

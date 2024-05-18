@@ -51,7 +51,7 @@ export default function Page() {
 
 			const { image, name, symbol, description, decimals } = submission.value
 
-			const data = await imageUpload(image, '', symbol, description)
+			const data = await imageUpload(image, name, symbol, description)
 			console.log(data)
 			const uri = `${window.location.origin}/api/metadata/${data?.id}`
 
