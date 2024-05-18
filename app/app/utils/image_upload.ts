@@ -1,5 +1,3 @@
-type Data = { id: string }
-
 export async function imageUpload(
 	image: File,
 	name: string,
@@ -14,7 +12,7 @@ export async function imageUpload(
 		},
 	)
 
-	const data: Data = await res.json()
+	const data: { id: string } = await res.json()
 
 	if (res.ok) {
 		return data
