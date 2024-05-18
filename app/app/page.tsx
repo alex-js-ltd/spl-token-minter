@@ -62,7 +62,7 @@ export default function Page() {
 
 	useEffect(() => {
 		if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
-	}, [run, sendAndConfirmTx, tx])
+	}, [run, sendAndConfirmTx, tx, mintKeypair])
 
 	return (
 		<>

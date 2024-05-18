@@ -27,7 +27,6 @@ export async function uploadMetadata(prevState: unknown, formData: FormData) {
 		},
 	})
 
-	console.log(metadata)
 	return {
 		...submission.reply(),
 		data: { decimals, name, symbol, id: metadata.id },
