@@ -17,7 +17,7 @@ import { SubmitButton } from './comps/submit_button'
 
 import { uploadMetadata } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
-import { useEffect, use } from 'react'
+import { useEffect } from 'react'
 import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
 
 const { CLUSTER } = getEnv()
