@@ -16,5 +16,9 @@ export async function imageUpload(
 
 	const data: Data = await res.json()
 
-	return data
+	if (res.ok) {
+		return data
+	} else {
+		return Promise.reject(data)
+	}
 }
