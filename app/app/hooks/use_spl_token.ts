@@ -2,11 +2,10 @@ import type { Transaction } from '@solana/web3.js'
 import { useAnchorProgram } from './use_anchor_program'
 import { Keypair } from '@solana/web3.js'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
-import { useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
 import { useEffect } from 'react'
 import { useAsync } from './use_async'
-import { useSendAndConfirmTx } from './use_send_and_confirm_tx'
-import { use } from 'react'
+import invariant from 'tiny-invariant'
 
 type TokenData = {
 	id: string
@@ -21,49 +20,27 @@ export function useSplToken({ data }: { data?: TokenData }) {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	const createSplToken = useCallback(
-		async (decimals: number, name: string, symbol: string, uri: string) => {
-			if (!program || !payer) return
-			try {
-				const transaction = program.methods
-					.createToken(decimals, name, symbol, uri)
-					.accounts({
-						payer: payer.publicKey,
-						mintAccount: mintKeypair.publicKey,
-					})
-					.transaction()
-				return transaction
-			} catch (error) {
-				console.error('Error creating SPL token:', error)
-				throw error
-			}
-		},
-		[program, payer, mintKeypair],
-	)
+	const { run, data: tx, isLoading, error } = useAsync<Transaction>()
 
-	const { run, data: tx, isLoading } = useAsync()
-
-	const { decimals, name, symbol, id } = data ?? {}
-
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	console.log('create spl token err', error)
 
 	useEffect(() => {
-		if (!decimals || !name || !symbol || !id) return
-		const uri = `${window.location.origin}/api/metadata/${id}`
-		createSplToken(decimals, name, symbol, uri).then(tx => {
-			if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
-			return tx
-		})
-	}, [
-		run,
-		createSplToken,
-		decimals,
-		name,
-		symbol,
-		id,
-		mintKeypair,
-		sendAndConfirmTx,
-	])
+		if (!data) return
+		invariant(program)
+		invariant(payer)
+		invariant(mintKeypair)
 
-	return { tx, isLoading }
+		const uri = `${window.location.origin}/api/metadata/${data?.id}`
+		const tx = program.methods
+			.createToken(data.decimals, data.name, data.symbol, uri)
+			.accounts({
+				payer: payer.publicKey,
+				mintAccount: mintKeypair.publicKey,
+			})
+			.transaction()
+
+		run(tx)
+	}, [run, data, program, payer, mintKeypair])
+
+	return { tx, isLoading, mintKeypair }
 }

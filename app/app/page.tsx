@@ -59,10 +59,13 @@ export default function Page() {
 	}, [])
 
 	const { data } = lastResult
-	const { isLoading, tx } = useSplToken({ data })
+	const { tx, mintKeypair } = useSplToken({ data })
+	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	const { run, isLoading } = useAsync()
 
-	console.log(isLoading)
-	console.log(tx)
+	useEffect(() => {
+		if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
+	}, [run, sendAndConfirmTx, tx])
 
 	return (
 		<>
