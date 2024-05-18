@@ -59,14 +59,10 @@ export default function Page() {
 	}, [])
 
 	const { data } = lastResult
-	const { tx } = useSplToken({ ...data })
-	const { run, isLoading } = useAsync()
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	const { isLoading, tx } = useSplToken({ data })
 
-	console.log(data)
-	useEffect(() => {
-		if (tx) run(sendAndConfirmTx(tx))
-	}, [run, sendAndConfirmTx, tx])
+	console.log(isLoading)
+	console.log(tx)
 
 	return (
 		<>

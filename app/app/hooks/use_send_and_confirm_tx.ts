@@ -28,7 +28,7 @@ export function useSendAndConfirmTx() {
 				console.log(error)
 			}
 		},
-		[connection], // Dependencies
+		[connection, sendTransaction], // Dependencies
 	)
 
 	return { sendAndConfirmTx }
