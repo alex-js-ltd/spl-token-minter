@@ -7,7 +7,6 @@ import {
 	WalletAdapterNetwork,
 } from '@jup-ag/wallet-adapter'
 import { useNetworkConfiguration } from './network_context'
-import { clusterApiUrl } from '@solana/web3.js'
 import { getEnv } from '@/app/utils/env'
 
 const { CLUSTER } = getEnv()
@@ -17,10 +16,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
 	const network = networkConfiguration as WalletAdapterNetwork
 
-	const selectedEndpoint: string = useMemo(
-		() => 'https://api.devnet.solana.com' ?? clusterApiUrl(network),
-		[network],
-	)
+	const selectedEndpoint: string = useMemo(() => {
+		return CLUSTER
+	}, [network])
 
 	return (
 		<ConnectionProvider endpoint={selectedEndpoint}>
