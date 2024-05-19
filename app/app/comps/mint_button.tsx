@@ -4,7 +4,13 @@ import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
 import { useMintSomeTokens } from '../hooks/use_mint_some_tokens'
 import { useCallback } from 'react'
 
-export function MintButton({ mintKeypair }: { mintKeypair: Keypair }) {
+export function MintButton({
+	mintKeypair,
+	symbol,
+}: {
+	mintKeypair: Keypair
+	symbol?: string
+}) {
 	const { tx } = useMintSomeTokens({ mintKeypair })
 	const { run, data, isLoading, error } = useAsync()
 
@@ -24,7 +30,7 @@ export function MintButton({ mintKeypair }: { mintKeypair: Keypair }) {
 				onClick={handleClick}
 				className="ml-auto inline-flex select-none items-center gap-1 whitespace-nowrap rounded-full border border-zinc-200 bg-white px-2 py-0.5 transition-colors hover:border-zinc-800"
 			>
-				Mint
+				Mint 1,000,000,000 {symbol}
 				<svg
 					width="15"
 					height="15"

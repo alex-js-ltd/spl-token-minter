@@ -136,8 +136,10 @@ export default function Page() {
 				</form>
 			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col overflow-hidden sm:max-w-xl">
-				{isSuccess ? <MintButton mintKeypair={mintKeypair} /> : null}
+			<div className="absolute top-full mx-auto mt-6 flex max-w-full flex-wrap items-center justify-center gap-2 whitespace-nowrap px-4 text-sm">
+				{isSuccess ? (
+					<MintButton mintKeypair={mintKeypair} symbol={data?.symbol} />
+				) : null}
 			</div>
 		</>
 	)
