@@ -37,6 +37,10 @@ export function useMintSomeTokens({ mintKeypair }: { mintKeypair: Keypair }) {
 			.transaction()
 
 		run(tx)
+
+		console.log(
+			`Associated Token Account Address: ${associatedTokenAccountAddress}`,
+		)
 	}, [run, program, payer, mintKeypair])
 
 	return {

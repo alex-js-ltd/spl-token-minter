@@ -30,7 +30,11 @@ export function useCreateSplToken({ data }: { data?: TokenData }) {
 		invariant(payer)
 		invariant(mintKeypair)
 
-		const uri = `${window.location.origin}/api/metadata/${data?.id}`
+		const localhost = window.location.hostname === 'localhost'
+
+		const uri = localhost
+			? `https://spl-token-minter-theta.vercel.app/api/metadata/${data?.id}`
+			: `${window.location.origin}/api/metadata/${data?.id}`
 
 		const tx = program.methods
 			.createToken(data.decimals, data.name, data.symbol, uri)
