@@ -6,14 +6,22 @@ import { Spinner } from './spinner'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useFormStatus } from 'react-dom'
 
-type SubmitButtonProps = ButtonProps & { isLoading?: boolean }
+type SubmitButtonProps = ButtonProps & {
+	isLoading: boolean
+	isSuccess: boolean
+}
 
-export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
+export function SubmitButton({
+	isLoading,
+	isSuccess,
+	...rest
+}: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
 	const { publicKey } = wallet || {}
 
 	const { pending } = useFormStatus()
-	const disabled = !publicKey || pending || isLoading ? true : false
+	const disabled =
+		!publicKey || pending || isLoading || isSuccess ? true : false
 
 	return (
 		<Button type="submit" disabled={disabled} {...rest}>

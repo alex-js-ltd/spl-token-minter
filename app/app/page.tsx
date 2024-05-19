@@ -19,6 +19,7 @@ import { uploadMetadata } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
 import { useEffect } from 'react'
 import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
+import { AnchorTag } from './comps/anchor_tag'
 
 const { CLUSTER } = getEnv()
 
@@ -57,11 +58,15 @@ export default function Page() {
 	const { data } = lastResult
 	const { tx, mintKeypair } = useCreateSplToken({ data })
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
-	const { run, isLoading, isSuccess } = useAsync()
+	const { run, isLoading, isSuccess, data: txSig } = useAsync()
 
 	useEffect(() => {
 		if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
 	}, [run, sendAndConfirmTx, tx, mintKeypair])
+
+	const href = txSig
+		? `https://explorer.solana.com/tx/${txSig}?cluster=${CLUSTER}`
+		: undefined
 
 	return (
 		<>
@@ -130,13 +135,18 @@ export default function Page() {
 								/>
 							</div>
 
-							<SubmitButton isLoading={isLoading} />
+							<SubmitButton isLoading={isLoading} isSuccess={isSuccess} />
 						</div>
 					</div>
 				</form>
 			</div>
 
-			<div className="absolute top-full mx-auto mt-6 flex max-w-full flex-wrap items-center justify-center gap-2 whitespace-nowrap px-4 text-sm">
+			<div className="z-10 m-auto flex w-full flex-col gap-3 overflow-hidden sm:max-w-xl">
+				{href ? (
+					<AnchorTag href={href} className="ml-auto">
+						view transaction
+					</AnchorTag>
+				) : null}
 				{isSuccess ? (
 					<MintButton mintKeypair={mintKeypair} symbol={data?.symbol} />
 				) : null}

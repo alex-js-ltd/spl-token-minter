@@ -1,3 +1,5 @@
+'use client'
+
 import { Keypair } from '@solana/web3.js'
 import { useAsync } from '@/app/hooks/use_async'
 import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
