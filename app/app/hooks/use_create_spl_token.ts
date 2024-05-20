@@ -13,6 +13,7 @@ type TokenData = {
 	symbol: string
 	supply: number
 }
+
 export function useCreateSplToken({ data }: { data?: TokenData }) {
 	const program = useAnchorProgram()
 	const payer = useAnchorWallet()

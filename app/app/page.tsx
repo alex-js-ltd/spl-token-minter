@@ -161,8 +161,8 @@ export default function Page() {
 				{data ? (
 					<MintButton
 						mintKeypair={mintKeypair}
-						supply={data?.supply}
-						symbol={data?.symbol}
+						supply={data.supply}
+						symbol={data.symbol}
 					/>
 				) : null}
 			</div>
