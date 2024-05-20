@@ -20,8 +20,6 @@ pub struct CreateToken<'info> {
         payer = payer,
         mint::decimals = _token_decimals,
         mint::authority = payer.key(),
-        mint::freeze_authority = payer.key(),
-
     )]
     pub mint_account: Account<'info, Mint>,
     /// CHECK: Validate address by deriving pda

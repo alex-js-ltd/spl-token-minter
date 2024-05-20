@@ -135,7 +135,7 @@ export default function Page() {
 								/>
 							</div>
 
-							<SubmitButton isLoading={isLoading} isSuccess={isSuccess} />
+							<SubmitButton isLoading={isLoading} />
 						</div>
 					</div>
 				</form>
