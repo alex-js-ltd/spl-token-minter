@@ -8,20 +8,14 @@ import { useFormStatus } from 'react-dom'
 
 type SubmitButtonProps = ButtonProps & {
 	isLoading: boolean
-	isSuccess: boolean
 }
 
-export function SubmitButton({
-	isLoading,
-	isSuccess,
-	...rest
-}: SubmitButtonProps) {
+export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {
 	const wallet = useAnchorWallet()
 	const { publicKey } = wallet || {}
 
 	const { pending } = useFormStatus()
-	const disabled =
-		!publicKey || pending || isLoading || isSuccess ? true : false
+	const disabled = !publicKey || pending || isLoading ? true : false
 
 	return (
 		<Button type="submit" disabled={disabled} {...rest}>
