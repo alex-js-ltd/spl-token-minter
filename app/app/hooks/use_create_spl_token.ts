@@ -12,6 +12,7 @@ type TokenData = {
 	decimals: number
 	name: string
 	symbol: string
+	supply: number
 }
 export function useCreateSplToken({ data }: { data?: TokenData }) {
 	const program = useAnchorProgram()

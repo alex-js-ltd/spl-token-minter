@@ -5,7 +5,7 @@ import { MetaData } from './schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
 
-export async function uploadMetadata(prevState: unknown, formData: FormData) {
+export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MetaData,
 	})
@@ -14,7 +14,8 @@ export async function uploadMetadata(prevState: unknown, formData: FormData) {
 		return { ...submission.reply(), data: undefined }
 	}
 
-	const { image, name, symbol, description, decimals } = submission.value
+	const { image, name, symbol, description, decimals, supply } =
+		submission.value
 
 	const blob = await put(image.name, image, { access: 'public' })
 
@@ -29,6 +30,6 @@ export async function uploadMetadata(prevState: unknown, formData: FormData) {
 
 	return {
 		...submission.reply(),
-		data: { decimals, name, symbol, id: metadata.id },
+		data: { decimals, name, symbol, supply, id: metadata.id },
 	}
 }

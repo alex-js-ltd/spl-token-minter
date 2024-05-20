@@ -6,7 +6,13 @@ import * as anchor from '@coral-xyz/anchor'
 import { useAsync } from '@/app/hooks/use_async'
 import { useEffect } from 'react'
 
-export function useMintSomeTokens({ mintKeypair }: { mintKeypair: Keypair }) {
+export function useMintSomeTokens({
+	mintKeypair,
+	supply,
+}: {
+	mintKeypair: Keypair
+	supply: number
+}) {
 	const program = useAnchorProgram()
 
 	const payer = useAnchorWallet()
@@ -24,7 +30,7 @@ export function useMintSomeTokens({ mintKeypair }: { mintKeypair: Keypair }) {
 		)
 
 		// Amount of tokens to mint.
-		const amount = new anchor.BN(1000000000)
+		const amount = new anchor.BN(supply)
 
 		const tx = program.methods
 			.mintToken(amount)
@@ -41,7 +47,7 @@ export function useMintSomeTokens({ mintKeypair }: { mintKeypair: Keypair }) {
 		console.log(
 			`Associated Token Account Address: ${associatedTokenAccountAddress}`,
 		)
-	}, [run, program, payer, mintKeypair])
+	}, [run, program, payer, mintKeypair, supply])
 
 	return {
 		tx: data,
