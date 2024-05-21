@@ -10,6 +10,7 @@ export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 		schema: MetaData,
 	})
 
+	console.log(submission)
 	if (submission.status !== 'success') {
 		return { ...submission.reply(), data: undefined }
 	}
