@@ -18,7 +18,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 	const network = networkConfiguration as WalletAdapterNetwork
 
 	const selectedEndpoint: string = useMemo(() => {
-		return clusterApiUrl(CLUSTER)
+		return CLUSTER
 	}, [network])
 
 	return (
