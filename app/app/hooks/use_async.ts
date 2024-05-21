@@ -83,14 +83,16 @@ const useAsync = <DataType>() => {
 
 	const safeSetState = useSafeDispatch(dispatch)
 
-	const run = useCallback((promise: Promise<DataType>) => {
+	const run = useCallback((promise: Promise<DataType>): Promise<DataType> => {
 		dispatch({ type: 'pending', promise })
-		promise.then(
+		return promise.then(
 			data => {
 				safeSetState({ type: 'resolved', data, promise })
+				return data
 			},
 			error => {
 				safeSetState({ type: 'rejected', error, promise })
+				return Promise.reject(error) // Propagate the error correctly
 			},
 		)
 	}, [])

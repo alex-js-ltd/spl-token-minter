@@ -5,17 +5,17 @@ import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useMemo } from 'react'
 import { useEffect } from 'react'
 import { useAsync } from './use_async'
-import invariant from 'tiny-invariant'
 
 type TokenData = {
 	id: string
 	decimals: number
 	name: string
 	symbol: string
+	supply: number
 }
+
 export function useCreateSplToken({ data }: { data?: TokenData }) {
 	const program = useAnchorProgram()
-
 	const payer = useAnchorWallet()
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
@@ -25,10 +25,7 @@ export function useCreateSplToken({ data }: { data?: TokenData }) {
 	console.log('create spl token err', error)
 
 	useEffect(() => {
-		if (!data) return
-		invariant(program)
-		invariant(payer)
-		invariant(mintKeypair)
+		if (!data || !program || !payer) return
 
 		const localhost = window.location.hostname === 'localhost'
 

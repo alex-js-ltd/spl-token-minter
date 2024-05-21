@@ -39,6 +39,8 @@ export default function Page() {
 		// Validate the form on blur event triggered
 		shouldValidate: 'onSubmit',
 
+		shouldRevalidate: 'onBlur',
+
 		lastResult,
 	})
 
@@ -58,7 +60,7 @@ export default function Page() {
 	const { data } = lastResult
 	const { tx, mintKeypair } = useCreateSplToken({ data })
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
-	const { run, isLoading, isSuccess, data: txSig } = useAsync()
+	const { run, isLoading, data: txSig } = useAsync()
 
 	useEffect(() => {
 		if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
@@ -83,7 +85,7 @@ export default function Page() {
 					action={action}
 				>
 					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-						<div className="relative grid grid-cols-1 sm:grid-cols-3 w-full">
+						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
 							<Field
 								inputProps={{
 									...getInputProps(fields.name, {
@@ -116,11 +118,21 @@ export default function Page() {
 
 							<Field
 								inputProps={{
+									...getInputProps(fields.supply, {
+										type: 'text',
+									}),
+									placeholder: 'Supply',
+								}}
+								errors={fields.description.errors}
+							/>
+
+							<Field
+								inputProps={{
 									...getInputProps(fields.description, {
 										type: 'text',
 									}),
 									placeholder: 'Description',
-									className: 'sm:col-span-3 w-full',
+									className: 'sm:col-span-4 w-full',
 								}}
 								errors={fields.description.errors}
 							/>
@@ -141,14 +153,19 @@ export default function Page() {
 				</form>
 			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col gap-3 overflow-hidden sm:max-w-xl">
+			<div className="z-10 m-auto flex w-full flex-col overflow-hidden rounded-xl gap-4 sm:max-w-xl">
 				{href ? (
 					<AnchorTag href={href} className="ml-auto">
 						view transaction
 					</AnchorTag>
 				) : null}
-				{isSuccess ? (
-					<MintButton mintKeypair={mintKeypair} symbol={data?.symbol} />
+
+				{href && data ? (
+					<MintButton
+						mintKeypair={mintKeypair}
+						supply={data.supply}
+						symbol={data.symbol}
+					/>
 				) : null}
 			</div>
 		</>
