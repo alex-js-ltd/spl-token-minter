@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 3 // 3MB
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 4.5 // 10MB
 
 export const MetaData = z.object({
 	name: z.string(),
@@ -10,7 +10,7 @@ export const MetaData = z.object({
 	description: z.string(),
 	image: z.instanceof(File).refine(file => {
 		return !file || file.size <= MAX_UPLOAD_SIZE
-	}, 'File size must be less than 3MB'),
+	}, 'File size must be less than 4.5MB'),
 })
 
 export const ImageUpload = z.object({

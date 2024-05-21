@@ -15,9 +15,6 @@ export function PreviewImage({
 	clearPreviewImage,
 	errors,
 }: PreviewImageProps) {
-	const error = errors?.length ? true : false
-	const border = error && !src ? 'border-red-400' : 'border-white/10'
-
 	return (
 		<div className="w-full h-[69px]">
 			<div
@@ -25,12 +22,7 @@ export function PreviewImage({
 					'flex w-full gap-2 border-b border-white border-opacity-[0.125] p-3'
 				}
 			>
-				<div
-					className={cn(
-						'group relative h-[44px] w-[48px] shrink-0 rounded-lg border transition-all duration-500 ease-in-out',
-						border,
-					)}
-				>
+				<div className="group relative h-[44px] w-[48px] shrink-0 rounded-lg border border-white/10 transition-all duration-500 ease-in-out">
 					{src ? (
 						<>
 							<button
@@ -50,6 +42,14 @@ export function PreviewImage({
 						</>
 					) : null}
 				</div>
+				{errors?.map(el => (
+					<span
+						key={el}
+						className="text-teal-300 text-xs whitespace-nowrap inline-block"
+					>
+						{el}
+					</span>
+				))}
 			</div>
 		</div>
 	)
