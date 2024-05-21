@@ -18,7 +18,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 	const network = networkConfiguration as WalletAdapterNetwork
 
 	const selectedEndpoint: string = useMemo(() => {
-		return CLUSTER
+		return CLUSTER === 'mainnet-beta'
+			? 'https://divine-ultra-diagram.solana-devnet.quiknode.pro'
+			: clusterApiUrl(CLUSTER)
 	}, [network])
 
 	return (
