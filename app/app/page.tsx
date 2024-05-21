@@ -158,7 +158,7 @@ export default function Page() {
 					</AnchorTag>
 				) : null}
 
-				{data ? (
+				{href && data ? (
 					<MintButton
 						mintKeypair={mintKeypair}
 						supply={data.supply}
