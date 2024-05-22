@@ -8,7 +8,6 @@ import {
 } from '@jup-ag/wallet-adapter'
 import { useNetworkConfiguration } from './network_context'
 import { getEnv } from '@/app/utils/env'
-import { clusterApiUrl } from '@solana/web3.js'
 
 const { CLUSTER } = getEnv()
 
@@ -18,9 +17,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 	const network = networkConfiguration as WalletAdapterNetwork
 
 	const selectedEndpoint: string = useMemo(() => {
-		return CLUSTER === 'mainnet-beta'
-			? 'https://divine-ultra-diagram.solana-devnet.quiknode.pro'
-			: clusterApiUrl(CLUSTER)
+		return CLUSTER
 	}, [network])
 
 	return (
