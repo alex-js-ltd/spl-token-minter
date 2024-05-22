@@ -4,13 +4,13 @@ import { parseWithZod } from '@conform-to/zod'
 import { MetaData } from './schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
+import invariant from 'tiny-invariant'
 
 export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MetaData,
 	})
 
-	console.log(submission)
 	if (submission.status !== 'success') {
 		return { ...submission.reply(), data: undefined }
 	}
@@ -28,6 +28,8 @@ export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 			description,
 		},
 	})
+
+	invariant(metadata, 'Failed to upload metadata')
 
 	return {
 		...submission.reply(),
