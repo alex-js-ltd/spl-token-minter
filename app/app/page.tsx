@@ -80,7 +80,7 @@ export default function Page() {
 				/>
 
 				<form
-					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-3 md:py-4"
+					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-5"
 					{...getFormProps(form)}
 					action={action}
 				>
