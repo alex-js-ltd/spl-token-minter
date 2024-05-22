@@ -4,6 +4,7 @@ import { parseWithZod } from '@conform-to/zod'
 import { MetaData } from './schemas'
 import { put } from '@vercel/blob'
 import { prisma } from '@/app/utils/db'
+import invariant from 'tiny-invariant'
 
 export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
@@ -19,6 +20,8 @@ export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 
 	const blob = await put(image.name, image, { access: 'public' })
 
+	invariant(blob, 'Failed to upload image')
+
 	const metadata = await prisma.tokenMetaData.create({
 		data: {
 			name,
@@ -27,6 +30,8 @@ export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 			description,
 		},
 	})
+
+	invariant(metadata, 'Failed to upload metadata')
 
 	return {
 		...submission.reply(),
