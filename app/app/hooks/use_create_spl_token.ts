@@ -1,10 +1,10 @@
-import type { Transaction } from '@solana/web3.js'
 import { useAnchorProgram } from './use_anchor_program'
 import { Keypair } from '@solana/web3.js'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useEffect } from 'react'
 import { useAsync } from './use_async'
+import { useSendAndConfirmTx } from './use_send_and_confirm_tx'
 
 type TokenData = {
 	id: string
@@ -20,12 +20,12 @@ export function useCreateSplToken({ data }: { data?: TokenData }) {
 
 	const mintKeypair = useMemo(() => new Keypair(), [])
 
-	const { run, data: tx, isLoading, error } = useAsync<Transaction>()
+	const { sendAndConfirmTx } = useSendAndConfirmTx()
 
-	console.log('create spl token err', error)
+	const getTxProps = useCallback(() => {
+		if (!data) return null
 
-	useEffect(() => {
-		if (!data || !program || !payer) return
+		const { id, ...rest } = data
 
 		const localhost = window.location.hostname === 'localhost'
 
@@ -33,16 +33,32 @@ export function useCreateSplToken({ data }: { data?: TokenData }) {
 			? `https://spl-token-minter-theta.vercel.app/api/metadata/${data?.id}`
 			: `${window.location.origin}/api/metadata/${data?.id}`
 
-		const tx = program.methods
-			.createToken(data.decimals, data.name, data.symbol, uri)
+		return { uri, ...rest }
+	}, [data])
+
+	const createSplToken = useCallback(async () => {
+		const data = getTxProps()
+
+		if (!data || !program || !payer) return
+
+		const tx = await program.methods
+			.createToken(data.decimals, data.name, data.symbol, data.uri)
 			.accounts({
 				payer: payer.publicKey,
 				mintAccount: mintKeypair.publicKey,
 			})
 			.transaction()
 
-		run(tx)
-	}, [run, data, program, payer, mintKeypair])
+		const txSig = sendAndConfirmTx(tx, [mintKeypair])
 
-	return { tx, isLoading, mintKeypair }
+		return txSig
+	}, [getTxProps, program, payer, sendAndConfirmTx, mintKeypair])
+
+	const { run, data: txSig, isLoading, error, isSuccess } = useAsync()
+
+	useEffect(() => {
+		run(createSplToken())
+	}, [run, createSplToken])
+
+	return { txSig, isLoading, isSuccess, mintKeypair }
 }

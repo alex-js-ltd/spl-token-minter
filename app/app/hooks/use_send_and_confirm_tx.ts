@@ -9,24 +9,20 @@ export function useSendAndConfirmTx() {
 
 	const sendAndConfirmTx = useCallback(
 		async (tx: Transaction, signers?: Signer[]) => {
-			try {
-				const txSig = await sendTransaction(tx, connection, {
-					signers: signers ? [...signers] : undefined,
-				})
+			const txSig = await sendTransaction(tx, connection, {
+				signers: signers ? [...signers] : undefined,
+			})
 
-				const { blockhash, lastValidBlockHeight } =
-					await connection.getLatestBlockhash()
+			const { blockhash, lastValidBlockHeight } =
+				await connection.getLatestBlockhash()
 
-				await connection.confirmTransaction({
-					blockhash,
-					lastValidBlockHeight,
-					signature: txSig,
-				})
+			await connection.confirmTransaction({
+				blockhash,
+				lastValidBlockHeight,
+				signature: txSig,
+			})
 
-				return txSig
-			} catch (error) {
-				console.log(error)
-			}
+			return txSig
 		},
 		[connection, sendTransaction],
 	)

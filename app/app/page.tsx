@@ -4,20 +4,17 @@ import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
 import { MetaData } from '@/app/utils/schemas'
-import { useAsync } from '@/app/hooks/use_async'
 import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { MintButton } from './comps/mint_button'
 import { useRef, useCallback } from 'react'
-import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
 import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
 
 import { uploadMetadata } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
-import { useEffect } from 'react'
 import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
 import { AnchorTag } from './comps/anchor_tag'
 
@@ -58,13 +55,9 @@ export default function Page() {
 	}, [])
 
 	const { data } = lastResult
-	const { tx, mintKeypair } = useCreateSplToken({ data })
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
-	const { run, isLoading, data: txSig } = useAsync()
-
-	useEffect(() => {
-		if (tx) run(sendAndConfirmTx(tx, [mintKeypair]))
-	}, [run, sendAndConfirmTx, tx, mintKeypair])
+	const { txSig, mintKeypair, isLoading, isSuccess } = useCreateSplToken({
+		data,
+	})
 
 	const href = txSig
 		? `https://explorer.solana.com/tx/${txSig}?cluster=${CLUSTER}`
@@ -119,7 +112,7 @@ export default function Page() {
 							<Field
 								inputProps={{
 									...getInputProps(fields.supply, {
-										type: 'text',
+										type: 'number',
 									}),
 									placeholder: 'Supply',
 								}}
@@ -160,7 +153,7 @@ export default function Page() {
 					</AnchorTag>
 				) : null}
 
-				{href && data ? (
+				{isSuccess && data ? (
 					<MintButton
 						mintKeypair={mintKeypair}
 						supply={data.supply}
