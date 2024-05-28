@@ -1,5 +1,5 @@
 {
-  "address": "GJ82nHsPWrqgciqXbNvL22oSw76jiPrNCkYuqgYgPHpC",
+  "address": "GaPC2f7pRHLE8AUpvAYXKP9QrRwpAuW3thuJpEYvJERg",
   "metadata": {
     "name": "spl_token_minter",
     "version": "0.1.0",
@@ -120,6 +120,26 @@
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "revoke",
+      "discriminator": [170, 23, 31, 34, 133, 173, 93, 242],
+      "accounts": [
+        {
+          "name": "mint_authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint_account",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
     }
   ]
 }

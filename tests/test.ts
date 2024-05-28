@@ -61,4 +61,16 @@ describe("SPL Token Minter", () => {
     );
     console.log(`   Transaction Signature: ${transactionSignature}`);
   });
+
+  it("Revoke mint authority", async () => {
+    const transactionSignature = await program.methods
+      .revoke()
+      .accounts({
+        mintAuthority: payer.publicKey,
+        mintAccount: mintKeypair.publicKey,
+      })
+      .rpc();
+
+    console.log(transactionSignature);
+  });
 });

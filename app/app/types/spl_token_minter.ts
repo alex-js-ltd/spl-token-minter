@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/spl_token_minter.json`.
  */
 export type SplTokenMinter = {
-	address: 'GJ82nHsPWrqgciqXbNvL22oSw76jiPrNCkYuqgYgPHpC'
+	address: 'GaPC2f7pRHLE8AUpvAYXKP9QrRwpAuW3thuJpEYvJERg'
 	metadata: {
 		name: 'splTokenMinter'
 		version: '0.1.0'
@@ -126,6 +126,26 @@ export type SplTokenMinter = {
 					type: 'u64'
 				},
 			]
+		},
+		{
+			name: 'revoke'
+			discriminator: [170, 23, 31, 34, 133, 173, 93, 242]
+			accounts: [
+				{
+					name: 'mintAuthority'
+					writable: true
+					signer: true
+				},
+				{
+					name: 'mintAccount'
+					writable: true
+				},
+				{
+					name: 'tokenProgram'
+					address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+				},
+			]
+			args: []
 		},
 	]
 }

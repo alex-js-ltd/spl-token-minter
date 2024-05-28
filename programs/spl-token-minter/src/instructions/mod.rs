@@ -1,5 +1,7 @@
-pub mod create;
-pub mod mint;
+mod create;
+mod mint;
+mod revoke;
 
 pub use create::*;
 pub use mint::*;
+pub use revoke::*;
