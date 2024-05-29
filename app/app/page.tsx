@@ -15,8 +15,8 @@ import { createSplToken } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
 import { useAsync } from './hooks/use_async'
 import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
-import { useWallet } from '@jup-ag/wallet-adapter'
 import { useSerializedTx } from './hooks/use_serialized_tx'
+import { usePayer } from './hooks/use_payer'
 
 const initialState = {
 	serializedTransaction: undefined,
@@ -52,13 +52,13 @@ export default function Page() {
 		}
 	}, [])
 
-	const { publicKey } = useWallet()
+	const payer = usePayer()
 
 	const { serializedTransaction } = lastResult
 
 	const transaction = useSerializedTx({ serializedTransaction })
 
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	const sendAndConfirmTx = useSendAndConfirmTx()
 
 	const { run, isLoading } = useAsync()
 
@@ -139,7 +139,7 @@ export default function Page() {
 								{...getInputProps(fields.payer, {
 									type: 'hidden',
 								})}
-								value={publicKey?.toBase58()}
+								value={payer}
 							/>
 						</div>
 

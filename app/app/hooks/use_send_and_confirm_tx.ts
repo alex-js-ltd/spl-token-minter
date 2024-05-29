@@ -7,7 +7,7 @@ export function useSendAndConfirmTx() {
 
 	const { sendTransaction } = useWallet()
 
-	const sendAndConfirmTx = useCallback(
+	return useCallback(
 		async (tx: VersionedTransaction | Transaction, signers?: Signer[]) => {
 			try {
 				const txSig = await sendTransaction(tx, connection, {
@@ -29,6 +29,4 @@ export function useSendAndConfirmTx() {
 		},
 		[connection, sendTransaction],
 	)
-
-	return { sendAndConfirmTx }
 }
