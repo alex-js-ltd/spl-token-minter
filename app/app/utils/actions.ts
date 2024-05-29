@@ -44,9 +44,12 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	invariant(metadata, 'Failed to upload metadata')
 
 	const mintKeypair = new Keypair()
+
+	const payerKey = new PublicKey(payer)
+
 	const uri = `https://spl-token-minter-theta.vercel.app/api/metadata/${metadata.id}`
 
-	const createTx = await program.methods
+	const createIn = await program.methods
 		.createToken(decimals, name, symbol, uri)
 		.accounts({
 			payer: payer,
@@ -55,8 +58,6 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 
 		.instruction()
 
-	const payerKey = new PublicKey(payer)
-
 	const amount = new anchor.BN(supply)
 
 	const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
@@ -64,7 +65,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		payerKey,
 	)
 
-	const mintTx = await program.methods
+	const mintIn = await program.methods
 		.mintToken(amount)
 		.accounts({
 			mintAuthority: payer,
@@ -78,7 +79,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 		.getLatestBlockhash()
 		.then(res => res.blockhash)
 
-	const instructions = [createTx, mintTx]
+	const instructions = [createIn, mintIn]
 
 	const messageV0 = new TransactionMessage({
 		payerKey,
@@ -89,6 +90,7 @@ export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const transaction = new VersionedTransaction(messageV0)
 
 	transaction.sign([mintKeypair])
+
 	const serializedTransaction = transaction.serialize()
 
 	return {
