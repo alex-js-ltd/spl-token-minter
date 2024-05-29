@@ -1,10 +1,10 @@
 import { useAnchorProgram } from './use_anchor_program'
 import { Keypair } from '@solana/web3.js'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
-import { useMemo, useCallback } from 'react'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
+
 import { useAsync } from './use_async'
-import { useSendAndConfirmTx } from './use_send_and_confirm_tx'
+import type { Transaction } from '@solana/web3.js'
 
 type TokenData = {
 	id: string
@@ -14,13 +14,15 @@ type TokenData = {
 	supply: number
 }
 
-export function useCreateSplToken({ data }: { data?: TokenData }) {
+export function useCreateSplToken({
+	data,
+	mintKeypair,
+}: {
+	data?: TokenData
+	mintKeypair: Keypair
+}) {
 	const program = useAnchorProgram()
 	const payer = useAnchorWallet()
-
-	const mintKeypair = useMemo(() => new Keypair(), [])
-
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
 
 	const getTxProps = useCallback(() => {
 		if (!data) return null
@@ -36,29 +38,24 @@ export function useCreateSplToken({ data }: { data?: TokenData }) {
 		return { uri, ...rest }
 	}, [data])
 
-	const createSplToken = useCallback(async () => {
+	const { run, data: tx, isSuccess } = useAsync<Transaction>()
+
+	useEffect(() => {
 		const data = getTxProps()
 
 		if (!data || !program || !payer) return
 
-		const tx = await program.methods
+		const tx = program.methods
 			.createToken(data.decimals, data.name, data.symbol, data.uri)
 			.accounts({
 				payer: payer.publicKey,
 				mintAccount: mintKeypair.publicKey,
 			})
+
 			.transaction()
 
-		const txSig = sendAndConfirmTx(tx, [mintKeypair])
+		run(tx)
+	}, [getTxProps, program, payer, run])
 
-		return txSig
-	}, [getTxProps, program, payer, sendAndConfirmTx, mintKeypair])
-
-	const { run, data: txSig, isLoading, error, isSuccess } = useAsync()
-
-	useEffect(() => {
-		run(createSplToken())
-	}, [run, createSplToken])
-
-	return { txSig, isLoading, isSuccess, mintKeypair }
+	return { tx, isSuccess }
 }

@@ -9,7 +9,7 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { MintButton } from './comps/mint_button'
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useMemo, useEffect } from 'react'
 import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
 
@@ -17,6 +17,12 @@ import { uploadMetadata } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
 import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
 import { AnchorTag } from './comps/anchor_tag'
+
+import { useAsync } from './hooks/use_async'
+import { useMintSomeTokens } from './hooks/use_mint_some_tokens'
+
+import { Keypair, Transaction } from '@solana/web3.js'
+import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
 
 const { CLUSTER } = getEnv()
 
@@ -54,14 +60,35 @@ export default function Page() {
 		}
 	}, [])
 
+	const mintKeypair = useMemo(() => new Keypair(), [])
+
 	const { data } = lastResult
-	const { txSig, mintKeypair, isLoading, isSuccess } = useCreateSplToken({
+
+	const { tx: createTx, isSuccess } = useCreateSplToken({
 		data,
+		mintKeypair,
 	})
 
-	const href = txSig
-		? `https://explorer.solana.com/tx/${txSig}?cluster=${CLUSTER}`
-		: undefined
+	const { tx: mintTx } = useMintSomeTokens({
+		mintKeypair,
+		supply: data?.supply,
+		isSuccess,
+	})
+
+	const { run, isLoading } = useAsync()
+
+	const { sendAndConfirmTx } = useSendAndConfirmTx()
+
+	useEffect(() => {
+		if (!createTx || !mintTx) return
+
+		const tx1 = new Transaction()
+
+		tx1.add(createTx)
+		tx1.add(mintTx)
+
+		run(sendAndConfirmTx(tx1, [mintKeypair]))
+	}, [createTx, mintTx, run, sendAndConfirmTx])
 
 	return (
 		<>
@@ -146,21 +173,7 @@ export default function Page() {
 				</form>
 			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col overflow-hidden rounded-xl gap-4 sm:max-w-xl">
-				{href ? (
-					<AnchorTag href={href} className="ml-auto">
-						view transaction
-					</AnchorTag>
-				) : null}
-
-				{isSuccess && data ? (
-					<MintButton
-						mintKeypair={mintKeypair}
-						supply={data.supply}
-						symbol={data.symbol}
-					/>
-				) : null}
-			</div>
+			<div className="z-10 m-auto flex w-full flex-col overflow-hidden rounded-xl gap-4 sm:max-w-xl"></div>
 		</>
 	)
 }

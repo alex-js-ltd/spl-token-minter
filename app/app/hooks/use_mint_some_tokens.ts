@@ -3,53 +3,50 @@ import { Keypair } from '@solana/web3.js'
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import * as anchor from '@coral-xyz/anchor'
-import { useAsync } from '@/app/hooks/use_async'
-import { useCallback } from 'react'
-import { useSendAndConfirmTx } from './use_send_and_confirm_tx'
 
-export function useMintSomeTokens({ mintKeypair }: { mintKeypair: Keypair }) {
+import { useEffect } from 'react'
+import { useAsync } from '@/app/hooks/use_async'
+import type { Transaction } from '@solana/web3.js'
+
+export function useMintSomeTokens({
+	mintKeypair,
+	supply,
+	isSuccess,
+}: {
+	mintKeypair: Keypair
+	supply?: number
+	isSuccess: boolean
+}) {
 	const program = useAnchorProgram()
 
 	const payer = useAnchorWallet()
 
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	const { run, data: tx } = useAsync<Transaction>()
 
-	const { run, data, isLoading, error } = useAsync()
+	useEffect(() => {
+		if (!payer || !program || !supply || !isSuccess) return
 
-	const mintSomeTokens = useCallback(
-		async (supply: number) => {
-			if (!payer || !program) return
+		// Derive the associated token address account for the mint and payer.
+		const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
+			mintKeypair.publicKey,
+			payer.publicKey,
+		)
 
-			// Derive the associated token address account for the mint and payer.
-			const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
-				mintKeypair.publicKey,
-				payer.publicKey,
-			)
+		// Amount of tokens to mint.
+		const amount = new anchor.BN(supply)
 
-			// Amount of tokens to mint.
-			const amount = new anchor.BN(supply)
+		const tx = program.methods
+			.mintToken(amount)
+			.accounts({
+				mintAuthority: payer.publicKey,
+				recipient: payer.publicKey,
+				mintAccount: mintKeypair.publicKey,
+				associatedTokenAccount: associatedTokenAccountAddress,
+			})
+			.transaction()
 
-			const tx = await program.methods
-				.mintToken(amount)
-				.accounts({
-					mintAuthority: payer.publicKey,
-					recipient: payer.publicKey,
-					mintAccount: mintKeypair.publicKey,
-					associatedTokenAccount: associatedTokenAccountAddress,
-				})
-				.transaction()
+		run(tx)
+	}, [payer, program, supply, run, isSuccess])
 
-			const txSig = await sendAndConfirmTx(tx)
-			return txSig
-		},
-		[program, payer, sendAndConfirmTx, mintKeypair],
-	)
-
-	return {
-		run,
-		mintSomeTokens,
-		data,
-		isLoading,
-		error,
-	}
+	return { tx }
 }
