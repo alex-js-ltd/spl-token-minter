@@ -8,8 +8,6 @@ import invariant from 'tiny-invariant'
 import { program, connection } from '@/app/utils/setup'
 import {
 	Keypair,
-	Transaction,
-	Connection,
 	TransactionMessage,
 	PublicKey,
 	VersionedTransaction,
@@ -18,13 +16,13 @@ import {
 import { getAssociatedTokenAddressSync } from '@solana/spl-token'
 import * as anchor from '@coral-xyz/anchor'
 
-export async function uploadMetadata(_prevState: unknown, formData: FormData) {
+export async function createSplToken(_prevState: unknown, formData: FormData) {
 	const submission = parseWithZod(formData, {
 		schema: MetaData,
 	})
 
 	if (submission.status !== 'success') {
-		return { ...submission.reply(), data: undefined }
+		return { ...submission.reply(), serializedTransaction: undefined }
 	}
 
 	const { image, name, symbol, description, decimals, supply, payer } =
@@ -95,6 +93,6 @@ export async function uploadMetadata(_prevState: unknown, formData: FormData) {
 
 	return {
 		...submission.reply(),
-		data: { transaction: serializedTransaction },
+		serializedTransaction,
 	}
 }

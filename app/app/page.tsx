@@ -9,31 +9,21 @@ import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { Input } from './comps/input'
-import { MintButton } from './comps/mint_button'
-import { useRef, useCallback, useMemo, useEffect } from 'react'
-import { getEnv } from './utils/env'
+import { useRef, useCallback, useEffect } from 'react'
 import { SubmitButton } from './comps/submit_button'
-
-import { uploadMetadata } from '@/app/utils/actions'
+import { createSplToken } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
-import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
-import { AnchorTag } from './comps/anchor_tag'
-
 import { useAsync } from './hooks/use_async'
-import { useMintSomeTokens } from './hooks/use_mint_some_tokens'
-
-import { Keypair, VersionedTransaction } from '@solana/web3.js'
 import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
 import { useWallet } from '@jup-ag/wallet-adapter'
-
-const { CLUSTER } = getEnv()
+import { useSerializedTx } from './hooks/use_serialized_tx'
 
 const initialState = {
-	data: undefined,
+	serializedTransaction: undefined,
 }
 
 export default function Page() {
-	const [lastResult, action] = useFormState(uploadMetadata, initialState)
+	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
@@ -64,21 +54,19 @@ export default function Page() {
 
 	const { publicKey } = useWallet()
 
-	const { data } = lastResult
+	const { serializedTransaction } = lastResult
+
+	const transaction = useSerializedTx({ serializedTransaction })
 
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
 
+	const { run, isLoading } = useAsync()
+
 	useEffect(() => {
-		console.log(data)
+		if (!transaction) return
 
-		const transaction = data?.transaction
-
-		if (transaction) {
-			const t = VersionedTransaction.deserialize(transaction)
-			console.log(t)
-			sendAndConfirmTx(t)
-		}
-	}, [data])
+		run(sendAndConfirmTx(transaction))
+	}, [run, sendAndConfirmTx, transaction])
 
 	return (
 		<>
@@ -164,7 +152,7 @@ export default function Page() {
 								/>
 							</div>
 
-							<SubmitButton />
+							<SubmitButton isLoading={isLoading} />
 						</div>
 					</div>
 				</form>
