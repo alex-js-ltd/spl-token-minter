@@ -7,7 +7,7 @@ import { useAnchorWallet } from '@jup-ag/wallet-adapter'
 import { useFormStatus } from 'react-dom'
 
 type SubmitButtonProps = ButtonProps & {
-	isLoading: boolean
+	isLoading?: boolean
 }
 
 export function SubmitButton({ isLoading, ...rest }: SubmitButtonProps) {

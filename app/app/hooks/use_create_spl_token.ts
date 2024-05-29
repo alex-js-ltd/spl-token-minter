@@ -6,6 +6,8 @@ import { useCallback, useEffect } from 'react'
 import { useAsync } from './use_async'
 import type { Transaction } from '@solana/web3.js'
 
+import { program } from '@/app/utils/setup'
+
 type TokenData = {
 	id: string
 	decimals: number
@@ -21,7 +23,6 @@ export function useCreateSplToken({
 	data?: TokenData
 	mintKeypair: Keypair
 }) {
-	const program = useAnchorProgram()
 	const payer = useAnchorWallet()
 
 	const getTxProps = useCallback(() => {

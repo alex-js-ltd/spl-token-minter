@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
+import { Input } from './comps/input'
 import { MintButton } from './comps/mint_button'
 import { useRef, useCallback, useMemo, useEffect } from 'react'
 import { getEnv } from './utils/env'
@@ -21,8 +22,9 @@ import { AnchorTag } from './comps/anchor_tag'
 import { useAsync } from './hooks/use_async'
 import { useMintSomeTokens } from './hooks/use_mint_some_tokens'
 
-import { Keypair, Transaction } from '@solana/web3.js'
+import { Keypair, VersionedTransaction } from '@solana/web3.js'
 import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
+import { useWallet } from '@jup-ag/wallet-adapter'
 
 const { CLUSTER } = getEnv()
 
@@ -60,35 +62,23 @@ export default function Page() {
 		}
 	}, [])
 
-	const mintKeypair = useMemo(() => new Keypair(), [])
+	const { publicKey } = useWallet()
 
 	const { data } = lastResult
-
-	const { tx: createTx, isSuccess } = useCreateSplToken({
-		data,
-		mintKeypair,
-	})
-
-	const { tx: mintTx } = useMintSomeTokens({
-		mintKeypair,
-		supply: data?.supply,
-		isSuccess,
-	})
-
-	const { run, isLoading } = useAsync()
 
 	const { sendAndConfirmTx } = useSendAndConfirmTx()
 
 	useEffect(() => {
-		if (!createTx || !mintTx) return
+		console.log(data)
 
-		const tx1 = new Transaction()
+		const transaction = data?.transaction
 
-		tx1.add(createTx)
-		tx1.add(mintTx)
-
-		run(sendAndConfirmTx(tx1, [mintKeypair]))
-	}, [createTx, mintTx, run, sendAndConfirmTx])
+		if (transaction) {
+			const t = VersionedTransaction.deserialize(transaction)
+			console.log(t)
+			sendAndConfirmTx(t)
+		}
+	}, [data])
 
 	return (
 		<>
@@ -156,6 +146,13 @@ export default function Page() {
 								}}
 								errors={fields.description.errors}
 							/>
+
+							<Input
+								{...getInputProps(fields.payer, {
+									type: 'hidden',
+								})}
+								value={publicKey?.toBase58()}
+							/>
 						</div>
 
 						<div className="flex w-full gap-2 px-3 md:px-4">
@@ -167,7 +164,7 @@ export default function Page() {
 								/>
 							</div>
 
-							<SubmitButton isLoading={isLoading} />
+							<SubmitButton />
 						</div>
 					</div>
 				</form>

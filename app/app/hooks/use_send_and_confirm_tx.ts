@@ -1,15 +1,14 @@
-import type { Transaction, Signer } from '@solana/web3.js'
+import type { VersionedTransaction, Signer } from '@solana/web3.js'
 import { useConnection, useWallet } from '@jup-ag/wallet-adapter'
 import { useCallback } from 'react'
-import { tryCatch } from 'ramda'
 
 export function useSendAndConfirmTx() {
 	const { connection } = useConnection()
 
-	const { sendTransaction } = useWallet()
+	const { sendTransaction, signAllTransactions } = useWallet()
 
 	const sendAndConfirmTx = useCallback(
-		async (tx: Transaction, signers?: Signer[]) => {
+		async (tx: VersionedTransaction, signers?: Signer[]) => {
 			try {
 				const txSig = await sendTransaction(tx, connection, {
 					signers: signers ? [...signers] : undefined,

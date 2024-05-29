@@ -8,6 +8,8 @@ import { useEffect } from 'react'
 import { useAsync } from '@/app/hooks/use_async'
 import type { Transaction } from '@solana/web3.js'
 
+import { program } from '@/app/utils/setup'
+
 export function useMintSomeTokens({
 	mintKeypair,
 	supply,
@@ -17,8 +19,6 @@ export function useMintSomeTokens({
 	supply?: number
 	isSuccess: boolean
 }) {
-	const program = useAnchorProgram()
-
 	const payer = useAnchorWallet()
 
 	const { run, data: tx } = useAsync<Transaction>()
