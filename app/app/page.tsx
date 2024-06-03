@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
@@ -10,15 +11,11 @@ import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
 import { MintButton } from './comps/mint_button'
 import { useRef, useCallback } from 'react'
-import { getEnv } from './utils/env'
 import { SubmitButton } from './comps/submit_button'
 
 import { uploadMetadata } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
 import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
-import { AnchorTag } from './comps/anchor_tag'
-
-const { CLUSTER } = getEnv()
 
 const initialState = {
 	data: undefined,
@@ -59,13 +56,8 @@ export default function Page() {
 		data,
 	})
 
-	const href = txSig
-		? `https://explorer.solana.com/tx/${txSig}?cluster=${CLUSTER}`
-		: undefined
-
-	console.log(href)
 	return (
-		<>
+		<Fragment>
 			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
 				<PreviewImage
 					src={previewImage}
@@ -148,12 +140,6 @@ export default function Page() {
 			</div>
 
 			<div className="z-10 m-auto flex w-full flex-col overflow-hidden rounded-xl gap-4 sm:max-w-xl">
-				{href ? (
-					<AnchorTag href={href} className="ml-auto">
-						view transaction
-					</AnchorTag>
-				) : null}
-
 				{isSuccess && data ? (
 					<MintButton
 						mintKeypair={mintKeypair}
@@ -162,6 +148,6 @@ export default function Page() {
 					/>
 				) : null}
 			</div>
-		</>
+		</Fragment>
 	)
 }
