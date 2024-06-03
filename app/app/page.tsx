@@ -3,40 +3,32 @@
 import { useForm, getFormProps, getInputProps } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 
-import { MetaData } from '@/app/utils/schemas'
+import { TokenSchema } from '@/app/utils/schemas'
 import { useState } from 'react'
 import { ImageChooser } from '@/app/comps/image_chooser'
 import { PreviewImage } from '@/app/comps/preview_image'
 import { Field } from '@/app/comps/field'
-import { MintButton } from './comps/mint_button'
-import { useRef, useCallback, useMemo, useEffect } from 'react'
-import { getEnv } from './utils/env'
-import { SubmitButton } from './comps/submit_button'
-
-import { uploadMetadata } from '@/app/utils/actions'
+import { Input } from '@/app/comps/input'
+import { useRef, useCallback, useEffect } from 'react'
+import { SubmitButton } from '@/app/comps/submit_button'
+import { createSplToken } from '@/app/utils/actions'
 import { useFormState } from 'react-dom'
-import { useCreateSplToken } from '@/app/hooks/use_create_spl_token'
-import { AnchorTag } from './comps/anchor_tag'
-
-import { useAsync } from './hooks/use_async'
-import { useMintSomeTokens } from './hooks/use_mint_some_tokens'
-
-import { Keypair, Transaction } from '@solana/web3.js'
-import { useSendAndConfirmTx } from './hooks/use_send_and_confirm_tx'
-
-const { CLUSTER } = getEnv()
+import { useAsync } from '@/app/hooks/use_async'
+import { useSendAndConfirmTx } from '@/app/hooks/use_send_and_confirm_tx'
+import { useSerializedTx } from '@/app/hooks/use_serialized_tx'
+import { usePayer } from '@/app/hooks/use_payer'
 
 const initialState = {
-	data: undefined,
+	serializedTransaction: undefined,
 }
 
 export default function Page() {
-	const [lastResult, action] = useFormState(uploadMetadata, initialState)
+	const [lastResult, action] = useFormState(createSplToken, initialState)
 
 	const [form, fields] = useForm({
 		// Reuse the validation logic on the client
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: MetaData })
+			return parseWithZod(formData, { schema: TokenSchema })
 		},
 
 		// Validate the form on blur event triggered
@@ -60,120 +52,112 @@ export default function Page() {
 		}
 	}, [])
 
-	const mintKeypair = useMemo(() => new Keypair(), [])
+	const payer = usePayer()
 
-	const { data } = lastResult
+	const { serializedTransaction } = lastResult
 
-	const { tx: createTx, isSuccess } = useCreateSplToken({
-		data,
-		mintKeypair,
-	})
-
-	const { tx: mintTx } = useMintSomeTokens({
-		mintKeypair,
-		supply: data?.supply,
-		isSuccess,
-	})
+	const transaction = useSerializedTx({ serializedTransaction })
 
 	const { run, isLoading } = useAsync()
 
-	const { sendAndConfirmTx } = useSendAndConfirmTx()
+	const sendAndConfirmTx = useSendAndConfirmTx()
 
 	useEffect(() => {
-		if (!createTx || !mintTx) return
+		if (!transaction) return
 
-		const tx1 = new Transaction()
-
-		tx1.add(createTx)
-		tx1.add(mintTx)
-
-		run(sendAndConfirmTx(tx1, [mintKeypair]))
-	}, [createTx, mintTx, run, sendAndConfirmTx])
+		run(sendAndConfirmTx(transaction))
+	}, [run, sendAndConfirmTx, transaction])
 
 	return (
-		<>
-			<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
-				<PreviewImage
-					src={previewImage}
-					clearPreviewImage={clearPreviewImage}
-					errors={fields.image.errors}
-				/>
+		<div className="z-10 m-auto flex w-full flex-col divide-zinc-600 overflow-hidden rounded-xl bg-gray-900 shadow-lg shadow-black/40 sm:max-w-xl">
+			<PreviewImage
+				src={previewImage}
+				clearPreviewImage={clearPreviewImage}
+				errors={fields.image.errors}
+			/>
 
-				<form
-					className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-5"
-					{...getFormProps(form)}
-					action={action}
-				>
-					<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
-						<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
-							<Field
-								inputProps={{
-									...getInputProps(fields.name, {
-										type: 'text',
-									}),
-									placeholder: 'Name',
-								}}
-								errors={fields.name.errors}
-							/>
+			<form
+				className="relative z-10 h-full w-full min-w-0 bg-gray-900 py-5"
+				{...getFormProps(form)}
+				action={action}
+			>
+				<div className="relative flex w-full flex-1 items-center transition-all duration-300 flex-col gap-6">
+					<div className="relative grid grid-cols-1 sm:grid-cols-4 w-full">
+						<Field
+							inputProps={{
+								...getInputProps(fields.name, {
+									type: 'text',
+								}),
+								placeholder: 'Name',
+							}}
+							errors={fields.name.errors}
+						/>
 
-							<Field
-								inputProps={{
-									...getInputProps(fields.symbol, {
-										type: 'text',
-									}),
-									placeholder: 'Symbol',
-								}}
-								errors={fields.symbol.errors}
-							/>
+						<Field
+							inputProps={{
+								...getInputProps(fields.symbol, {
+									type: 'text',
+								}),
+								placeholder: 'Symbol',
+							}}
+							errors={fields.symbol.errors}
+						/>
 
-							<Field
-								inputProps={{
-									...getInputProps(fields.decimals, {
-										type: 'number',
-									}),
-									placeholder: 'Decimals',
-								}}
-								errors={fields.decimals.errors}
-							/>
+						<Field
+							inputProps={{
+								...getInputProps(fields.decimals, {
+									type: 'number',
+								}),
+								placeholder: 'Decimals',
+								min: 0,
+								max: 9,
+							}}
+							errors={fields.decimals.errors}
+						/>
 
-							<Field
-								inputProps={{
-									...getInputProps(fields.supply, {
-										type: 'number',
-									}),
-									placeholder: 'Supply',
-								}}
-								errors={fields.description.errors}
-							/>
+						<Field
+							inputProps={{
+								...getInputProps(fields.supply, {
+									type: 'number',
+								}),
+								placeholder: 'Supply',
+								min: 1,
+							}}
+							errors={fields.supply.errors}
+						/>
 
-							<Field
-								inputProps={{
-									...getInputProps(fields.description, {
-										type: 'text',
-									}),
-									placeholder: 'Description',
-									className: 'sm:col-span-4 w-full',
-								}}
-								errors={fields.description.errors}
-							/>
-						</div>
+						<Field
+							inputProps={{
+								...getInputProps(fields.description, {
+									type: 'text',
+								}),
+								placeholder: 'Description',
+								className: 'sm:col-span-4 w-full',
+							}}
+							errors={fields.description.errors}
+						/>
 
-						<div className="flex w-full gap-2 px-3 md:px-4">
-							<div className="flex flex-1 gap-1 sm:gap-2">
-								<ImageChooser
-									name={fields.image.name}
-									setPreviewImage={setPreviewImage}
-									fileRef={fileRef}
-								/>
-							</div>
-
-							<SubmitButton isLoading={isLoading} />
-						</div>
+						<Input
+							{...getInputProps(fields.payer, {
+								type: 'hidden',
+							})}
+							defaultValue={payer}
+						/>
 					</div>
-				</form>
-			</div>
 
-			<div className="z-10 m-auto flex w-full flex-col overflow-hidden rounded-xl gap-4 sm:max-w-xl"></div>
-		</>
+					<div className="flex w-full gap-2 px-3 md:px-4">
+						<div className="flex flex-1 gap-1 sm:gap-2">
+							<ImageChooser
+								name={fields.image.name}
+								setPreviewImage={setPreviewImage}
+								fileRef={fileRef}
+							/>
+						</div>
+
+						<SubmitButton isLoading={isLoading} />
+					</div>
+				</div>
+			</form>
+		</div>
 	)
 }
