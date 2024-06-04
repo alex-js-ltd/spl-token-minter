@@ -11,7 +11,7 @@ import { getEnv } from '@/app/utils/env'
 import { clusterApiUrl } from '@solana/web3.js'
 
 const { CLUSTER } = getEnv()
-
+console.log(CLUSTER)
 export function WalletProvider({ children }: { children: ReactNode }) {
 	const { networkConfiguration } = useNetworkConfiguration()
 
